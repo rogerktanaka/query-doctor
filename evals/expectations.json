@@ -122,4 +122,53 @@
     "Do not claim that an index is missing or that the query is slow."
   ]
 }
+,
+{
+  "id": "007-sqlserver-query",
+  "name": "Clean SQL Server-specific query",
+  "dialect": "sqlserver",
+  "scoreRange": {
+    "min": 8,
+    "max": 10
+  },
+  "requiredFindings": [
+    "Recognize TOP (25) as valid SQL Server row limiting syntax.",
+    "Recognize dbo as a conventional SQL Server schema.",
+    "Recognize N'ana%' as a valid SQL Server Unicode string literal.",
+    "Recognize CAST(created_at AS date) as valid SQL Server syntax.",
+    "Acknowledge explicit column selection and clear aliasing."
+  ],
+  "forbiddenClaims": [
+    "Do not claim that TOP is invalid SQL.",
+    "Do not recommend replacing TOP with LIMIT.",
+    "Do not recommend Oracle ROWNUM.",
+    "Do not recommend PostgreSQL ILIKE or ::date syntax.",
+    "Do not describe SQL Server syntax as MySQL syntax.",
+    "Do not claim that an index is missing or that the query is slow."
+  ]
+}
+,
+{
+  "id": "008-mysql-query",
+  "name": "Clean MySQL-specific query",
+  "dialect": "mysql",
+  "scoreRange": {
+    "min": 8,
+    "max": 10
+  },
+  "requiredFindings": [
+    "Recognize backtick-quoted identifiers as valid MySQL syntax.",
+    "Recognize DATE(created_at) as valid MySQL date extraction syntax.",
+    "Recognize LIMIT 25 as valid MySQL row limiting syntax.",
+    "Acknowledge explicit column selection and clear aliasing."
+  ],
+  "forbiddenClaims": [
+    "Do not claim that backtick quoting is invalid SQL.",
+    "Do not recommend replacing LIMIT with SQL Server TOP.",
+    "Do not recommend Oracle ROWNUM.",
+    "Do not recommend PostgreSQL ILIKE or ::date syntax.",
+    "Do not require CAST(created_at AS date) as a correction.",
+    "Do not claim that an index is missing or that the query is slow."
+  ]
+}
 ]
