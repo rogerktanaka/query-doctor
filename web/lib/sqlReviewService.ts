@@ -1,3 +1,7 @@
+import {
+  DEFAULT_SQL_DIALECT,
+  type SqlDialect,
+} from "@/lib/review/sqlDialect";
 import type { ReviewResult } from "@/types/review";
 
 interface ReviewErrorResponse {
@@ -20,6 +24,7 @@ function isReviewErrorResponse(
 
 export async function reviewSql(
   sql: string,
+  dialect: SqlDialect = DEFAULT_SQL_DIALECT,
 ): Promise<ReviewResult> {
   if (!sql.trim()) {
     throw new Error("SQL query is required.");
@@ -33,7 +38,10 @@ export async function reviewSql(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ sql }),
+      body: JSON.stringify({
+        sql,
+        dialect,
+      }),
     });
   } catch {
     throw new Error(

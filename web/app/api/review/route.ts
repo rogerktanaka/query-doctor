@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { reviewSql } from "@/lib/ai/reviewEngine";
-
 import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
+import {
+  DEFAULT_SQL_DIALECT,
+  isSqlDialect,
+  SQL_DIALECTS,
+} from "@/lib/review/sqlDialect";
 
 function getErrorStatus(error: unknown): number | null {
   if (
@@ -59,6 +63,21 @@ export async function POST(request: Request) {
         code: "SQL_TOO_LONG",
       },
       { status: 413 },
+    );
+  }
+
+  const dialectCandidate =
+    "dialect" in body
+      ? body.dialect
+      : DEFAULT_SQL_DIALECT;
+
+  if (!isSqlDialect(dialectCandidate)) {
+    return NextResponse.json(
+      {
+        error: `SQL dialect must be one of: ${SQL_DIALECTS.join(", ")}.`,
+        code: "INVALID_DIALECT",
+      },
+      { status: 400 },
     );
   }
 
