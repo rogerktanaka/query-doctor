@@ -248,6 +248,10 @@ Prefer the typed comparison because it is clearer and avoids applying a function
 
 Treat possible index impact as conditional.
 
+When the supplied SQL uses a typed DATE literal but does not explicitly show time zone conversion or a time zone–aware type, do not invent session time zone, UTC boundary, or time zone compatibility concerns.
+
+Unknown column data type alone is not sufficient evidence for a time zone observation or suggestion.
+
 Do not generalize this equivalence to arbitrary formats, operators, ranges, timestamps with time zones, or string representations.
 
 ---
@@ -278,12 +282,22 @@ Classify this as:
 - severity: `high`
 - confidence: `high`
 
-Do not invent how the expression should be aggregated.
+Do not invent how the ungrouped expression should be aggregated.
 
-Present possible corrections conditionally based on the intended result grain.
+When intended result grain is unknown, present only semantically explicit alternatives, such as:
+
+- remove the ungrouped expression for group-level output
+- add the expression to GROUP BY for a more detailed result grain
+
+Label each alternative as conditional on author intent.
+
+Do not suggest MIN, MAX, ANY_VALUE, or another representative-value aggregate unless the supplied SQL or stated requirement demonstrates that choosing an arbitrary representative value is meaningful.
+
+When a standard aggregation violation is directly observable, do not dilute the finding with speculation about permissive modes in MySQL or other dialects unless that dialect is explicitly demonstrated by the supplied SQL.
+
+Do not recommend changing database configuration or SQL modes as a substitute for correcting invalid aggregation.
 
 Do not suggest that GROUP BY is a performance problem merely because aggregation exists.
-
 ---
 
 ## COUNT and EXISTS
@@ -292,12 +306,22 @@ Do not suggest that GROUP BY is a performance problem merely because aggregation
 
 Treat this primarily as a low-severity clarity or query-design issue.
 
-EXISTS may allow early termination, but optimizer transformations are engine-dependent.
+Without an execution plan, recommend EXISTS only because it communicates existence intent more directly.
 
-Do not claim that COUNT must scan every matching row.
+Do not infer physical execution behavior from the written syntax.
+
+Specifically, do not claim that:
+
+- the correlated COUNT executes once per outer row
+- COUNT must inspect or count every matching row
+- COUNT cannot terminate early
+- EXISTS will short-circuit
+- EXISTS will execute fewer operations
+- EXISTS will be cheaper or faster
+
+The optimizer may transform either expression, so runtime differences are unknown without an execution plan and database context.
 
 Do not claim that changing COUNT to EXISTS changes NULL or duplicate semantics in a simple existence test.
-
 ---
 
 ## IN and EXISTS
@@ -335,15 +359,41 @@ Function-based indexes may be mentioned only as a conditional possibility when r
 
 ## Sorting and Ordering
 
+ORDER BY expresses an observable output-order requirement.
+
 Do not claim that ORDER BY necessarily forces an explicit sort.
 
 An optimizer may obtain ordered output through an index or another plan operation.
 
-Do not recommend removing ORDER BY unless ordering is demonstrably unnecessary.
+Because caller requirements and execution plans are unknown, do not recommend removing ORDER BY based only on possible sorting cost.
 
-The caller’s ordering requirement is unknown.
+Do not mention removal of ORDER BY in:
 
+- summaries
+- category summaries
+- observations
+- suggestions
+
+unless the SQL itself proves that the ordering is redundant or ineffective.
+
+Do not create a performance observation merely because ORDER BY is present.
 ---
+
+## Clean Query Discipline
+
+Do not turn ordinary SQL behavior into a recommendation unless it creates a material concern visible in the supplied SQL.
+
+For a clean aggregate query:
+
+- do not raise possible NULL groups merely because a grouped column could theoretically be nullable
+- do not raise SUM returning NULL merely because all input values could theoretically be NULL
+- do not recommend COALESCE unless the SQL or stated requirement demonstrates that zero is required
+- do not recommend removing ORDER BY merely because ordering might have a runtime cost
+- do not create index, sorting, cardinality, or data-volume suggestions without query-specific evidence
+
+Acknowledge good SQL and allow suggestions to be empty.
+
+Conditional wording does not make an irrelevant recommendation useful.
 
 ## Performance Review
 
