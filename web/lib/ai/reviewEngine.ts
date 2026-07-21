@@ -1,7 +1,21 @@
-import type { ReviewResult } from "@/types/review";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
-export async function reviewSqlWithAi(
-  _sql: string,
-): Promise<ReviewResult> {
-  throw new Error("Not implemented");
+const PROMPTS_DIRECTORY = path.resolve(
+  process.cwd(),
+  "..",
+  "prompts",
+);
+
+export async function loadPrompt(
+  promptName: string,
+): Promise<string> {
+  const promptPath = path.join(
+    PROMPTS_DIRECTORY,
+    promptName,
+  );
+
+  const prompt = await readFile(promptPath, "utf-8");
+
+  return prompt.trim();
 }
