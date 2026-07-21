@@ -82,7 +82,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const review = await reviewSql(sql);
+    const review = await reviewSql(sql,dialectCandidate,);
     const durationMs = Date.now() - startedAt;
 
     console.info(`SQL review completed in ${durationMs}ms.`);

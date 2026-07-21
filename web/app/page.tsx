@@ -4,6 +4,12 @@ import { useState } from "react";
 
 import { ReviewResult } from "@/components/ReviewResult";
 import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
+import {
+  DEFAULT_SQL_DIALECT,
+  isSqlDialect,
+  SQL_DIALECT_OPTIONS,
+  type SqlDialect,
+} from "@/lib/review/sqlDialect";
 import { reviewSql } from "@/lib/sqlReviewService";
 import type { ReviewResult as ReviewResultType } from "@/types/review";
 
@@ -23,26 +29,50 @@ ORDER BY
 
 export default function Home() {
   const [sql, setSql] = useState("");
-  const [review, setReview] = useState<ReviewResultType | null>(null);
-  const [isReviewing, setIsReviewing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [dialect, setDialect] =
+    useState<SqlDialect>(
+      DEFAULT_SQL_DIALECT,
+    );
+  const [review, setReview] =
+    useState<ReviewResultType | null>(null);
+  const [isReviewing, setIsReviewing] =
+    useState(false);
+  const [error, setError] =
+    useState<string | null>(null);
 
-  const isSqlTooLong = sql.length > MAX_SQL_LENGTH;
+  const isSqlTooLong =
+    sql.length > MAX_SQL_LENGTH;
   const isNearSqlLimit =
     sql.length >= MAX_SQL_LENGTH * 0.9;
+
+  function clearReviewState() {
+    setReview(null);
+    setError(null);
+  }
+
+  function handleDialectChange(
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) {
+    const nextDialect = event.target.value;
+
+    if (!isSqlDialect(nextDialect)) {
+      return;
+    }
+
+    setDialect(nextDialect);
+    clearReviewState();
+  }
 
   function handleSqlChange(
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) {
     setSql(event.target.value);
-    setReview(null);
-    setError(null);
+    clearReviewState();
   }
 
   function handleLoadSample() {
     setSql(SAMPLE_SQL);
-    setReview(null);
-    setError(null);
+    clearReviewState();
   }
 
   async function handleReview() {
@@ -62,7 +92,11 @@ export default function Home() {
     setError(null);
 
     try {
-      const result = await reviewSql(sql);
+      const result = await reviewSql(
+        sql,
+        dialect,
+      );
+
       setReview(result);
     } catch (caughtError) {
       const message =
@@ -96,6 +130,38 @@ export default function Home() {
         </header>
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
+          <div className="mb-6 max-w-sm">
+            <label
+              htmlFor="sql-dialect"
+              className="mb-2 block text-sm font-medium text-zinc-200"
+            >
+              Database dialect
+            </label>
+
+            <select
+              id="sql-dialect"
+              value={dialect}
+              onChange={handleDialectChange}
+              disabled={isReviewing}
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:text-zinc-500"
+            >
+              {SQL_DIALECT_OPTIONS.map(
+                (option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ),
+              )}
+            </select>
+
+            <p className="mt-2 text-xs leading-5 text-zinc-500">
+              Selecting a dialect improves syntax-specific recommendations.
+            </p>
+          </div>
+
           <div className="mb-3 flex items-center justify-between gap-4">
             <label
               htmlFor="sql-query"
@@ -169,7 +235,9 @@ GROUP BY customer_id;`}
               }
               className="shrink-0 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
             >
-              {isReviewing ? "Reviewing..." : "Review query"}
+              {isReviewing
+                ? "Reviewing..."
+                : "Review query"}
             </button>
           </div>
         </section>
@@ -183,7 +251,12 @@ GROUP BY customer_id;`}
           </p>
         )}
 
-        {review && <ReviewResult review={review} />}
+        {review && (
+          <ReviewResult
+            review={review}
+            dialect={dialect}
+          />
+        )}
       </div>
     </main>
   );
