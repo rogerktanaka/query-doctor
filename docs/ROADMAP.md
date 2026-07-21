@@ -3,11 +3,15 @@
 ## Current Version
 
 **Version:** 0.1.0  
-**Status:** MVP in development
+**Status:** MVP publicly deployed  
+**Production:** https://query-doctor-six.vercel.app
 
 ---
 
 # Sprint 001 — Foundation
+
+**Status:** Complete  
+**Completed:** 2026-07-21
 
 ## Goal
 
@@ -15,7 +19,7 @@ Create the first working version of Query Doctor.
 
 A user must be able to paste a SQL query and receive a structured AI-generated review.
 
-## Scope
+## Delivered Scope
 
 - Project repository
 - Development environment
@@ -25,36 +29,57 @@ A user must be able to paste a SQL query and receive a structured AI-generated r
 - Review submission
 - OpenAI API integration
 - Structured review response
-- Initial deployment
+- Overall and category scores
+- Severity and confidence classifications
+- Input validation
+- Loading and error states
+- Automated evaluation suite
+- Secure environment variable handling
+- Public Vercel deployment
 
 ## Definition of Done
 
-Sprint 001 is complete when:
-
-1. The application is publicly accessible.
-2. A user can paste a SQL query.
-3. The application sends the query for analysis.
-4. The user receives a useful structured review.
-5. The OpenAI API key is not exposed in the browser.
+- [x] The application is publicly accessible.
+- [x] A user can paste a SQL query.
+- [x] The application sends the query for analysis.
+- [x] The user receives a useful structured review.
+- [x] The OpenAI API key is not exposed in the browser.
 
 ---
 
 # Sprint 002 — Review Quality
 
+**Status:** In progress
+
 ## Goal
 
-Improve the usefulness and consistency of SQL reviews.
+Improve the usefulness, consistency, and trustworthiness of SQL reviews.
 
-## Candidate Scope
+## Already Delivered
 
-- Improve review prompt
-- Add review categories
-- Add severity levels
-- Add overall score
-- Improve error handling
-- Improve loading state
-- Improve empty-input validation
-- Add sample SQL query
+- Improved SQL review system prompt
+- Structured review categories
+- Severity levels
+- Confidence levels
+- Overall score
+- Category scores
+- Improved loading state
+- Empty-input validation
+- Maximum-input validation
+- Initial automated evaluation suite
+- Model quality and latency comparison
+- Selection of GPT-5 for the MVP
+
+## Next Priorities
+
+- Add a sample SQL query action
+- Improve user-facing error messages
+- Improve score calibration
+- Reduce speculative recommendations
+- Expand evaluation coverage
+- Add regression checks for review quality
+- Document the evaluation workflow
+- Validate production latency and reliability
 
 ---
 
@@ -72,6 +97,7 @@ Make Query Doctor more useful for Oracle developers.
 - Execution plan recommendations
 - Detection of common Oracle anti-patterns
 - Review guidance for indexes and joins
+- Oracle-specific evaluation cases
 
 ---
 
