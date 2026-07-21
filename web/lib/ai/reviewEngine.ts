@@ -1,21 +1,74 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { zodTextFormat } from "openai/helpers/zod";
 
-const PROMPTS_DIRECTORY = path.resolve(
-  process.cwd(),
-  "..",
-  "prompts",
-);
+import {
+  ReviewResultSchema,
+  type ReviewResult,
+  validateReviewResult,
+} from "@/lib/review/reviewSchema";
 
-export async function loadPrompt(
-  promptName: string,
-): Promise<string> {
-  const promptPath = path.join(
-    PROMPTS_DIRECTORY,
-    promptName,
+import { MODEL_CONFIG } from "./modelConfig";
+import {
+  getOpenAIClient,
+  getOpenAIModel,
+} from "./openai";
+import { loadPrompt } from "./promptLoader";
+
+export async function reviewSql(
+  sql: string,
+): Promise<ReviewResult> {
+  const normalizedSql = sql.trim();
+
+  if (!normalizedSql) {
+    throw new Error("SQL must not be empty.");
+  }
+
+  const systemPrompt = await loadPrompt(
+    "sql-review-system.md",
   );
 
-  const prompt = await readFile(promptPath, "utf-8");
+  const client = getOpenAIClient();
+  const model = getOpenAIModel();
+  const config = MODEL_CONFIG.sqlReview;
 
-  return prompt.trim();
+  const response = await client.responses.parse({
+    model,
+    instructions: systemPrompt,
+    input: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "input_text",
+            text: [
+              "Review the following SQL statement.",
+              "",
+              "```sql",
+              normalizedSql,
+              "```",
+            ].join("\n"),
+          },
+        ],
+      },
+    ],
+    reasoning: {
+      effort: config.reasoningEffort,
+    },
+    max_output_tokens: config.maxOutputTokens,
+    text: {
+      format: zodTextFormat(
+        ReviewResultSchema,
+        "sql_review_result",
+      ),
+    },
+  });
+
+  if (!response.output_parsed) {
+    throw new Error(
+      "OpenAI returned no structured SQL review.",
+    );
+  }
+
+  return validateReviewResult(
+    response.output_parsed,
+  );
 }
