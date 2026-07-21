@@ -59,6 +59,26 @@ You can provide a descriptive run label:
 node evals/run.mjs gpt-5-low-v3
 ```
 
+### Running selected cases
+
+Use `--case` to run a specific evaluation case:
+
+```bash
+node evals/run.mjs targeted \
+  --case 001-clean-query
+```
+
+Repeat the option to run multiple cases:
+
+```bash
+node evals/run.mjs targeted \
+  --case 001-clean-query \
+  --case 005-invalid-aggregation
+```
+
+When no `--case` option is provided, all cases run as before.
+
+Unknown case IDs and invalid arguments fail before any API request is made.
 ## Running against another environment
 
 Set `EVAL_BASE_URL` to the target application:

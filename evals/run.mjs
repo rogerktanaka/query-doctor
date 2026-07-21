@@ -25,8 +25,49 @@ const baseUrl =
   process.env.EVAL_BASE_URL ??
   "http://localhost:3000";
 
-const runLabel =
-  process.argv[2] ?? "local";
+function parseArguments(args) {
+  let runLabel = "local";
+  let argumentIndex = 0;
+  const caseIds = [];
+
+  if (
+    args[0] &&
+    !args[0].startsWith("--")
+  ) {
+    runLabel = args[0];
+    argumentIndex = 1;
+  }
+
+  while (argumentIndex < args.length) {
+    const argument = args[argumentIndex];
+
+    if (argument !== "--case") {
+      throw new Error(
+        `Unknown argument: ${argument}`,
+      );
+    }
+
+    const caseId =
+      args[argumentIndex + 1];
+
+    if (
+      !caseId ||
+      caseId.startsWith("--")
+    ) {
+      throw new Error(
+        "--case requires an evaluation case ID.",
+      );
+    }
+
+    caseIds.push(caseId);
+    argumentIndex += 2;
+  }
+
+  return {
+    runLabel,
+    caseIds: [...new Set(caseIds)],
+  };
+}
 
 async function loadExpectations() {
   const contents = await readFile(
@@ -201,9 +242,44 @@ async function ensureServerAvailable() {
 }
 
 async function main() {
+  const {
+    runLabel,
+    caseIds,
+  } = parseArguments(
+    process.argv.slice(2),
+  );
+
+  const allExpectations =
+    await loadExpectations();
+
+  const unknownCaseIds = caseIds.filter(
+    (caseId) =>
+      !allExpectations.some(
+        (testCase) =>
+          testCase.id === caseId,
+      ),
+  );
+
+  if (unknownCaseIds.length > 0) {
+    throw new Error(
+      `Unknown evaluation case${
+        unknownCaseIds.length === 1
+          ? ""
+          : "s"
+      }: ${unknownCaseIds.join(", ")}`,
+    );
+  }
+
+  const expectations =
+    caseIds.length === 0
+      ? allExpectations
+      : allExpectations.filter(
+          (testCase) =>
+            caseIds.includes(testCase.id),
+        );
+
   await ensureServerAvailable();
 
-  const expectations = await loadExpectations();
   const startedAt = new Date();
 
   console.log(
@@ -211,6 +287,13 @@ async function main() {
   );
 
   console.log(`Run label: ${runLabel}`);
+
+  if (caseIds.length > 0) {
+    console.log(
+      `Selected cases: ${caseIds.join(", ")}`,
+    );
+  }
+
   console.log("");
 
   const results = [];
@@ -274,6 +357,7 @@ async function main() {
     projectDirectory,
     startedAt: startedAt.toISOString(),
     completedAt: completedAt.toISOString(),
+    selectedCaseIds: caseIds,
     averageDurationMs,
     summary: {
       total: results.length,
