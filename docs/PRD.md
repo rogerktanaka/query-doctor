@@ -93,7 +93,8 @@ Nothing else is required.
 
 # Non-Functional Requirements
 
-- Response time under 10 seconds
+- Target response time under 20 seconds for the MVP
+- Future optimization target under 10 seconds
 - Responsive interface
 - Simple user experience
 - Secure API key handling

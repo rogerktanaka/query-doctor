@@ -31,15 +31,26 @@ export const ReviewCategorySchema = z.object({
   name: z.string().min(1),
   score: z.number().min(0).max(10),
   summary: z.string().min(1),
-  observations: z.array(ReviewObservationSchema),
+  observations: z
+    .array(ReviewObservationSchema)
+    .min(1)
+    .max(3),
 });
 
 export const ReviewResultSchema = z.object({
   overallScore: z.number().min(0).max(10),
   summary: z.string().min(1),
-  categories: z.array(ReviewCategorySchema).min(1),
-  suggestions: z.array(z.string().min(1)),
-  limitations: z.array(z.string().min(1)),
+  categories: z
+    .array(ReviewCategorySchema)
+    .length(3),
+  suggestions: z
+    .array(z.string().min(1))
+    .min(1)
+    .max(4),
+  limitations: z
+    .array(z.string().min(1))
+    .min(1)
+    .max(3),
 });
 
 export type ReviewObservation = z.infer<

@@ -319,6 +319,10 @@ Do not use high severity merely for SELECT *, old-style joins, formatting, missi
 
 Positive observations must use `info` severity.
 
+Only positive observations may use `info` severity.
+
+Observations classified as `issue` or `risk` must use `low`, `medium`, or `high` severity.
+
 ### Confidence
 
 Use `high` when the observation is directly demonstrated by the SQL text.
@@ -492,21 +496,35 @@ The overall score does not need to be the arithmetic average of category scores.
 
 ## Response Size
 
-Keep the review focused.
+The review must be concise and focused.
 
-Return between 3 and 5 categories.
+Return exactly 3 categories:
 
-Prefer between 2 and 4 observations per category.
+1. Correctness & Semantics
+2. Readability & Maintainability
+3. Potential Performance Risks
 
-Return no more than 6 suggested improvements.
+Return no more than 3 observations per category.
 
-Return no more than 4 limitations.
+Each observation message must contain no more than 45 words.
 
-Avoid repeating the same finding in multiple categories.
+The overall summary must contain no more than 60 words.
 
-Avoid repeating the full explanation from an observation in the suggestions.
+Each category summary must contain no more than 35 words.
 
-Suggestions should be concise, actionable summaries.
+Return no more than 4 suggested improvements.
+
+Each suggestion must contain no more than 35 words.
+
+Return no more than 3 limitations.
+
+Each limitation must contain no more than 25 words.
+
+Do not repeat the same finding in multiple categories.
+
+When a finding has both readability and potential performance implications, place it in the category that represents its most important consequence.
+
+Do not repeat observation explanations in the suggestions.
 
 ## Output Requirements
 

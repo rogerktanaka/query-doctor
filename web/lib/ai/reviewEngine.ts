@@ -50,9 +50,13 @@ export async function reviewSql(
         ],
       },
     ],
-    reasoning: {
-      effort: config.reasoningEffort,
-    },
+    ...(model.startsWith("gpt-5")
+      ? {
+          reasoning: {
+            effort: config.reasoningEffort,
+          },
+        }
+      : {}),
     max_output_tokens: config.maxOutputTokens,
     text: {
       format: zodTextFormat(
@@ -63,16 +67,16 @@ export async function reviewSql(
   });
 
   if (!response.output_parsed) {
-  console.error("Structured review parsing failed:", {
-    status: response.status,
-    incompleteDetails: response.incomplete_details,
-    output: response.output,
-  });
+    console.error("Structured review parsing failed:", {
+      status: response.status,
+      incompleteDetails: response.incomplete_details,
+      output: response.output,
+    });
 
-  throw new Error(
-    `OpenAI returned no structured SQL review. Status: ${response.status}.`,
-  );
-}
+    throw new Error(
+      `OpenAI returned no structured SQL review. Status: ${response.status}.`,
+    );
+  }
 
   return validateReviewResult(
     response.output_parsed,
