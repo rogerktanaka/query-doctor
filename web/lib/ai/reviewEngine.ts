@@ -63,10 +63,16 @@ export async function reviewSql(
   });
 
   if (!response.output_parsed) {
-    throw new Error(
-      "OpenAI returned no structured SQL review.",
-    );
-  }
+  console.error("Structured review parsing failed:", {
+    status: response.status,
+    incompleteDetails: response.incomplete_details,
+    output: response.output,
+  });
+
+  throw new Error(
+    `OpenAI returned no structured SQL review. Status: ${response.status}.`,
+  );
+}
 
   return validateReviewResult(
     response.output_parsed,

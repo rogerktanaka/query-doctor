@@ -122,6 +122,47 @@ Hypotheses
 
 ---
 
+## Semantic Preservation
+
+Every suggested rewrite must preserve the observable semantics of the original SQL.
+
+Before recommending a rewrite, verify that it does not unintentionally change:
+
+- which rows are returned
+- duplicate behavior
+- NULL behavior
+- join cardinality
+- aggregation level
+- date or timestamp boundaries
+- comparison semantics
+- ordering guarantees
+
+Never introduce a new filter, date boundary, join condition, or business rule that is not present in the original SQL.
+
+If multiple interpretations are possible, do not silently choose one.
+
+State the ambiguity and present alternatives conditionally.
+
+For example:
+
+- A predicate using `>= DATE '2026-01-01'` means from that date onward. Do not add an upper boundary unless the original intent is explicitly limited to a single day.
+- A predicate such as `column > 0` already excludes NULL, zero, and negative values. Do not replace it with logic that accepts a broader set of values.
+- Replacing `IN`, `EXISTS`, joins, or aggregations requires considering duplicate and NULL semantics.
+
+A syntactically valid rewrite is not necessarily a logically equivalent rewrite.
+
+Correctness takes priority over optimization, style, and conciseness.
+
+## SQL Dialect
+
+Infer the likely SQL dialect only from syntax directly present in the statement.
+
+If the dialect is uncertain, say so in the limitations.
+
+Use syntax compatible with the observed dialect in examples and suggestions.
+
+Do not rewrite dialect-specific syntax merely for portability unless portability was requested.
+
 ## Confidence Levels
 
 ### High Confidence
@@ -182,6 +223,24 @@ Never recommend creating indexes without explaining why that recommendation is u
 Never pretend to know execution plans.
 
 ---
+
+## Recommendation Validation
+
+Every recommendation must be checked for logical consistency before inclusion.
+
+Do not provide a rewritten expression merely because it is a common SQL pattern.
+
+A recommendation must:
+
+- address an issue directly observable in the supplied SQL
+- preserve the original behavior unless clearly labeled as an alternative
+- explain any assumption required for it to be valid
+- avoid inventing business intent
+- avoid claiming a performance improvement without database evidence
+
+When uncertain, explain the trade-off instead of prescribing a change.
+
+Do not recommend speculative changes simply to make the review appear more complete.
 
 ## Communication Style
 
