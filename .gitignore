@@ -1,0 +1,5 @@
+# Evaluation outputs
+/evals/results/
+
+# macOS
+.DS_Store

@@ -106,31 +106,37 @@ export function ReviewResult({
               {category.summary}
             </p>
 
-            <ul className="mt-4 space-y-3 text-sm">
-              {category.observations.map(
-                (observation, index) => (
-                  <Observation
-                    key={`${category.id}-${index}`}
-                    observation={observation}
-                  />
-                ),
-              )}
-            </ul>
+            {category.observations.length > 0 && (
+              <ul className="mt-4 space-y-3 text-sm">
+                {category.observations.map(
+                  (observation, index) => (
+                    <Observation
+                      key={`${category.id}-${index}`}
+                      observation={observation}
+                    />
+                  ),
+                )}
+              </ul>
+            )}
           </article>
         ))}
       </div>
 
-      <div>
-        <h3 className="font-semibold">
-          Suggested improvements
-        </h3>
+      {review.suggestions.length > 0 && (
+        <div>
+          <h3 className="font-semibold">
+            Suggested improvements
+          </h3>
 
-        <ul className="mt-3 space-y-2 text-sm text-zinc-300">
-          {review.suggestions.map((suggestion, index) => (
-            <li key={index}>• {suggestion}</li>
-          ))}
-        </ul>
-      </div>
+          <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+            {review.suggestions.map(
+              (suggestion, index) => (
+                <li key={index}>• {suggestion}</li>
+              ),
+            )}
+          </ul>
+        </div>
+      )}
 
       <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
         <h3 className="font-semibold text-amber-300">
@@ -138,9 +144,11 @@ export function ReviewResult({
         </h3>
 
         <ul className="mt-3 space-y-2 text-sm text-amber-100/80">
-          {review.limitations.map((limitation, index) => (
-            <li key={index}>• {limitation}</li>
-          ))}
+          {review.limitations.map(
+            (limitation, index) => (
+              <li key={index}>• {limitation}</li>
+            ),
+          )}
         </ul>
       </div>
     </section>

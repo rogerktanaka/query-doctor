@@ -33,7 +33,6 @@ export const ReviewCategorySchema = z.object({
   summary: z.string().min(1),
   observations: z
     .array(ReviewObservationSchema)
-    .min(1)
     .max(3),
 });
 
@@ -45,7 +44,6 @@ export const ReviewResultSchema = z.object({
     .length(3),
   suggestions: z
     .array(z.string().min(1))
-    .min(1)
     .max(4),
   limitations: z
     .array(z.string().min(1))

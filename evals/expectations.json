@@ -1,0 +1,100 @@
+[
+  {
+    "id": "001-clean-query",
+    "name": "Clean aggregate query",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 8,
+      "max": 10
+    },
+    "requiredFindings": [
+      "Acknowledge explicit column selection.",
+      "Acknowledge the typed DATE literal.",
+      "Acknowledge clear aliases and aggregation."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that an index is missing.",
+      "Do not claim that the query is slow.",
+      "Do not invent schema or cardinality problems."
+    ]
+  },
+  {
+    "id": "002-oracle-antipatterns",
+    "name": "Oracle static-analysis patterns",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 6.5,
+      "max": 8
+    },
+    "requiredFindings": [
+      "Identify the conditional NULL risk of NOT IN with medium confidence.",
+      "Recognize that NVL(stock_on_hand, 0) > 0 is equivalent to stock_on_hand > 0 in this WHERE clause.",
+      "Recommend a typed DATE comparison without adding an upper boundary.",
+      "Treat index effects as conditional.",
+      "Recognize SELECT * and comma-style joins as maintainability concerns."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that item_supp_country.item is nullable.",
+      "Do not claim that the date rewrite changes time-of-day semantics.",
+      "Do not claim that COUNT(*) must scan every matching row.",
+      "Do not claim that IN is inherently slower than EXISTS."
+    ]
+  },
+  {
+    "id": "003-left-join-filter",
+    "name": "LEFT JOIN filtered in WHERE",
+    "dialect": "generic",
+    "scoreRange": {
+      "min": 6.5,
+      "max": 8.5
+    },
+    "requiredFindings": [
+      "Observe that WHERE o.status = 'OPEN' rejects NULL-extended rows.",
+      "Explain that the LEFT JOIN therefore behaves like an INNER JOIN.",
+      "Treat whether this is wrong as dependent on intended behavior."
+    ],
+    "forbiddenClaims": [
+      "Do not state that the query is definitely incorrect.",
+      "Do not invent an index recommendation.",
+      "Do not assume customers without orders must be returned."
+    ]
+  },
+  {
+    "id": "004-demonstrable-not-in-null",
+    "name": "NOT IN with explicit NULL",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 0,
+      "max": 4.9
+    },
+    "requiredFindings": [
+      "Identify the explicit NULL inside the NOT IN set.",
+      "Classify the correctness problem with high confidence.",
+      "Explain that the predicate cannot evaluate to TRUE for returned rows.",
+      "Recommend a NULL-safe alternative."
+    ],
+    "forbiddenClaims": [
+      "Do not describe the NULL risk as merely dependent on unknown nullability.",
+      "Do not give the query a passing correctness score."
+    ]
+  },
+  {
+    "id": "005-invalid-aggregation",
+    "name": "Invalid Oracle aggregation",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 0,
+      "max": 4.9
+    },
+    "requiredFindings": [
+      "Identify employee_name as neither grouped nor aggregated.",
+      "Classify this as a directly observable high-confidence correctness issue.",
+      "Explain that the SQL violates standard SQL aggregation rules."
+    ],
+    "forbiddenClaims": [
+      "Do not describe the query as functionally correct.",
+      "Do not focus primarily on indexes or performance.",
+      "Do not invent a business rule for how employee_name should be aggregated."
+    ]
+  }
+]
