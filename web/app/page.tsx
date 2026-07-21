@@ -42,6 +42,7 @@ export default function Home() {
 
   const isSqlTooLong =
     sql.length > MAX_SQL_LENGTH;
+
   const isNearSqlLimit =
     sql.length >= MAX_SQL_LENGTH * 0.9;
 
@@ -131,12 +132,18 @@ export default function Home() {
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
           <div className="mb-6 max-w-sm">
-            <label
-              htmlFor="sql-dialect"
-              className="mb-2 block text-sm font-medium text-zinc-200"
-            >
-              Database dialect
-            </label>
+            <div className="mb-2 flex items-center gap-2">
+              <label
+                htmlFor="sql-dialect"
+                className="block text-sm font-medium text-zinc-200"
+              >
+                Database dialect
+              </label>
+
+              <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-violet-300">
+                Beta
+              </span>
+            </div>
 
             <select
               id="sql-dialect"
@@ -158,7 +165,8 @@ export default function Home() {
             </select>
 
             <p className="mt-2 text-xs leading-5 text-zinc-500">
-              Selecting a dialect improves syntax-specific recommendations.
+              Dialect-aware guidance is experimental. Oracle currently has
+              the deepest evaluation coverage.
             </p>
           </div>
 
