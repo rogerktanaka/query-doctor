@@ -37,6 +37,42 @@ async function loadExpectations() {
   return JSON.parse(contents);
 }
 
+function evaluateResult(result) {
+  const failures = [];
+
+  if (!result.success) {
+    failures.push(
+      result.httpStatus === null
+        ? "The review request did not complete."
+        : `The API returned HTTP ${result.httpStatus}.`,
+    );
+  }
+
+  if (result.actualScore === null) {
+    failures.push(
+      "The response did not contain a numeric overall score.",
+    );
+  } else {
+    const { min, max } =
+      result.expectedScoreRange;
+
+    if (
+      result.actualScore < min ||
+      result.actualScore > max
+    ) {
+      failures.push(
+        `Score ${result.actualScore} is outside the expected range ${min}-${max}.`,
+      );
+    }
+  }
+
+  return {
+    passed: failures.length === 0,
+    failures,
+    qualitativeReviewRequired: true,
+  };
+}
+
 async function runCase(testCase) {
   const sqlPath = path.join(
     casesDirectory,
@@ -75,7 +111,7 @@ async function runCase(testCase) {
       };
     }
 
-    return {
+    const result = {
       id: testCase.id,
       name: testCase.name,
       dialect: testCase.dialect,
@@ -97,12 +133,17 @@ async function runCase(testCase) {
       review: response.ok ? payload : null,
       error: response.ok ? null : payload,
     };
+
+    return {
+      ...result,
+      evaluation: evaluateResult(result),
+    };
   } catch (error) {
     const durationMs = Math.round(
       performance.now() - startedAt,
     );
 
-    return {
+    const result = {
       id: testCase.id,
       name: testCase.name,
       dialect: testCase.dialect,
@@ -124,6 +165,11 @@ async function runCase(testCase) {
             ? error.message
             : "Unknown evaluation error.",
       },
+    };
+
+    return {
+      ...result,
+      evaluation: evaluateResult(result),
     };
   }
 }
@@ -154,9 +200,7 @@ async function ensureServerAvailable() {
   }
 }
 
-
 async function main() {
-  
   await ensureServerAvailable();
 
   const expectations = await loadExpectations();
@@ -184,9 +228,17 @@ async function main() {
         ? "-"
         : result.actualScore.toFixed(1);
 
+    const status = result.evaluation.passed
+      ? "PASS"
+      : "FAIL";
+
     console.log(
-      `Completed in ${result.durationMs}ms — status ${result.httpStatus ?? "error"} — score ${score}`,
+      `Completed in ${result.durationMs}ms — status ${result.httpStatus ?? "error"} — score ${score} — ${status}`,
     );
+
+    for (const failure of result.evaluation.failures) {
+      console.log(`  - ${failure}`);
+    }
 
     console.log("");
   }
@@ -195,6 +247,14 @@ async function main() {
 
   const successfulResults = results.filter(
     (result) => result.success,
+  );
+
+  const passedResults = results.filter(
+    (result) => result.evaluation.passed,
+  );
+
+  const failedResults = results.filter(
+    (result) => !result.evaluation.passed,
   );
 
   const averageDurationMs =
@@ -215,6 +275,12 @@ async function main() {
     startedAt: startedAt.toISOString(),
     completedAt: completedAt.toISOString(),
     averageDurationMs,
+    summary: {
+      total: results.length,
+      passed: passedResults.length,
+      failed: failedResults.length,
+      qualitativeReviewRequired: true,
+    },
     results,
   };
 
@@ -241,6 +307,9 @@ async function main() {
   console.table(
     results.map((result) => ({
       id: result.id,
+      result: result.evaluation.passed
+        ? "PASS"
+        : "FAIL",
       status: result.httpStatus ?? "error",
       durationMs: result.durationMs,
       score: result.actualScore ?? "-",
@@ -253,7 +322,19 @@ async function main() {
     `Average duration: ${averageDurationMs ?? "-"}ms`,
   );
 
+  console.log(
+    `Automated checks: ${passedResults.length} passed, ${failedResults.length} failed.`,
+  );
+
+  console.log(
+    "Qualitative review of required findings and forbidden claims is still required.",
+  );
+
   console.log(`Results saved to ${resultPath}`);
+
+  if (failedResults.length > 0) {
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {

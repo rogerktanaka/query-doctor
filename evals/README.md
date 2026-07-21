@@ -14,9 +14,83 @@ The suite helps detect:
 - semantic changes in suggested rewrites
 - response-time regressions
 
-Evaluation results require manual qualitative review.
+## Automated checks
 
-A score inside the expected range does not automatically mean that a review passed.
+The runner automatically verifies:
+
+- whether the API request completed successfully
+- whether the response contains a numeric overall score
+- whether the score is inside the expected range
+
+The process exits with code `1` if any automated check fails.
+
+A successful automated check does not prove that the review is correct.
+
+## Qualitative review
+
+The following expectations still require manual review:
+
+- required findings
+- forbidden claims
+- correctness of explanations
+- severity and confidence classification
+- semantic safety of suggestions
+- unsupported or speculative claims
+
+These expectations are stored in `expectations.json` and copied into each generated result.
+
+## Running locally
+
+Start the application in one terminal:
+
+```bash
+npm --prefix web run dev
+```
+
+Run the evaluation suite from the repository root in another terminal:
+
+```bash
+node evals/run.mjs local
+```
+
+You can provide a descriptive run label:
+
+```bash
+node evals/run.mjs gpt-5-low-v3
+```
+
+## Running against another environment
+
+Set `EVAL_BASE_URL` to the target application:
+
+```bash
+EVAL_BASE_URL=https://example.vercel.app \
+  node evals/run.mjs production
+```
+
+Only run the complete suite against production intentionally because each case makes an AI API request.
+
+## Exit codes
+
+- `0` — all automated checks passed
+- `1` — server unavailable, request failure, invalid score, or score outside its expected range
+
+## Results
+
+Generated results are written to `evals/results/`.
+
+Each result includes:
+
+- response time
+- HTTP status
+- expected score range
+- actual score
+- automated pass or fail status
+- failure reasons
+- complete structured review
+- qualitative expectations
+
+Generated result files are ignored by Git.
 
 ## Structure
 
@@ -28,3 +102,4 @@ evals/
 ├── expectations.json
 ├── README.md
 └── run.mjs
+```
