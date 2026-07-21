@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { reviewSql } from "@/lib/ai/reviewEngine";
 
-const MAX_SQL_LENGTH = 20_000;
+import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
 
 function getErrorStatus(error: unknown): number | null {
   if (

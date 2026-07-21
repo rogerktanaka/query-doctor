@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ReviewResult } from "@/components/ReviewResult";
+import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
 import { reviewSql } from "@/lib/sqlReviewService";
 import type { ReviewResult as ReviewResultType } from "@/types/review";
 
@@ -26,6 +27,18 @@ export default function Home() {
   const [isReviewing, setIsReviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isSqlTooLong = sql.length > MAX_SQL_LENGTH;
+  const isNearSqlLimit =
+    sql.length >= MAX_SQL_LENGTH * 0.9;
+
+  function handleSqlChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    setSql(event.target.value);
+    setReview(null);
+    setError(null);
+  }
+
   function handleLoadSample() {
     setSql(SAMPLE_SQL);
     setReview(null);
@@ -34,6 +47,13 @@ export default function Home() {
 
   async function handleReview() {
     if (!sql.trim() || isReviewing) {
+      return;
+    }
+
+    if (isSqlTooLong) {
+      setError(
+        `SQL query must not exceed ${MAX_SQL_LENGTH.toLocaleString("en-US")} characters.`,
+      );
       return;
     }
 
@@ -97,12 +117,40 @@ export default function Home() {
           <textarea
             id="sql-query"
             value={sql}
-            onChange={(event) => setSql(event.target.value)}
+            onChange={handleSqlChange}
+            aria-describedby="sql-character-count"
+            aria-invalid={isSqlTooLong}
             placeholder={`SELECT customer_id, COUNT(*)
 FROM orders
 GROUP BY customer_id;`}
-            className="min-h-80 w-full resize-y rounded-xl border border-zinc-700 bg-zinc-950 p-4 font-mono text-sm leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className={`min-h-80 w-full resize-y rounded-xl border bg-zinc-950 p-4 font-mono text-sm leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:ring-2 ${
+              isSqlTooLong
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500/20"
+            }`}
           />
+
+          <div
+            id="sql-character-count"
+            className={`mt-2 text-right text-xs ${
+              isSqlTooLong
+                ? "font-medium text-red-400"
+                : isNearSqlLimit
+                  ? "font-medium text-amber-400"
+                  : "text-zinc-500"
+            }`}
+          >
+            {sql.length.toLocaleString("en-US")} /{" "}
+            {MAX_SQL_LENGTH.toLocaleString("en-US")} characters
+          </div>
+
+          {isSqlTooLong && (
+            <p className="mt-2 text-sm text-red-300">
+              Remove{" "}
+              {(sql.length - MAX_SQL_LENGTH).toLocaleString("en-US")}{" "}
+              characters before submitting the query.
+            </p>
+          )}
 
           <div className="mt-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="max-w-2xl text-sm leading-6 text-zinc-500">
@@ -114,7 +162,11 @@ GROUP BY customer_id;`}
             <button
               type="button"
               onClick={handleReview}
-              disabled={!sql.trim() || isReviewing}
+              disabled={
+                !sql.trim() ||
+                isSqlTooLong ||
+                isReviewing
+              }
               className="shrink-0 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
             >
               {isReviewing ? "Reviewing..." : "Review query"}

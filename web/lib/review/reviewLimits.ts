@@ -1,0 +1,1 @@
+export const MAX_SQL_LENGTH = 20_000;
