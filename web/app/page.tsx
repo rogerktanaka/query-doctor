@@ -6,11 +6,31 @@ import { ReviewResult } from "@/components/ReviewResult";
 import { reviewSql } from "@/lib/sqlReviewService";
 import type { ReviewResult as ReviewResultType } from "@/types/review";
 
+const SAMPLE_SQL = `SELECT
+  c.customer_id,
+  c.customer_name,
+  COUNT(o.order_id) AS open_order_count
+FROM customers c
+LEFT JOIN orders o
+  ON o.customer_id = c.customer_id
+WHERE o.status = 'OPEN'
+GROUP BY
+  c.customer_id,
+  c.customer_name
+ORDER BY
+  c.customer_name;`;
+
 export default function Home() {
   const [sql, setSql] = useState("");
   const [review, setReview] = useState<ReviewResultType | null>(null);
   const [isReviewing, setIsReviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function handleLoadSample() {
+    setSql(SAMPLE_SQL);
+    setReview(null);
+    setError(null);
+  }
 
   async function handleReview() {
     if (!sql.trim() || isReviewing) {
@@ -56,12 +76,23 @@ export default function Home() {
         </header>
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
-          <label
-            htmlFor="sql-query"
-            className="mb-3 block text-sm font-medium text-zinc-200"
-          >
-            SQL query
-          </label>
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <label
+              htmlFor="sql-query"
+              className="block text-sm font-medium text-zinc-200"
+            >
+              SQL query
+            </label>
+
+            <button
+              type="button"
+              onClick={handleLoadSample}
+              disabled={isReviewing}
+              className="text-sm font-medium text-emerald-400 transition hover:text-emerald-300 disabled:cursor-not-allowed disabled:text-zinc-600"
+            >
+              Load sample query
+            </button>
+          </div>
 
           <textarea
             id="sql-query"
