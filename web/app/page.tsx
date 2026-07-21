@@ -2,23 +2,46 @@
 
 import { useState } from "react";
 
+import { ReviewResult } from "@/components/ReviewResult";
+import { reviewSql } from "@/lib/sqlReviewService";
+import type { ReviewResult as ReviewResultType } from "@/types/review";
+
 export default function Home() {
   const [sql, setSql] = useState("");
+  const [review, setReview] = useState<ReviewResultType | null>(null);
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleReview() {
-    if (!sql.trim()) {
+  async function handleReview() {
+    if (!sql.trim() || isReviewing) {
       return;
     }
 
-    alert("SQL review coming soon.");
+    setIsReviewing(true);
+    setReview(null);
+    setError(null);
+
+    try {
+      const result = await reviewSql(sql);
+      setReview(result);
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "An unexpected error occurred.";
+
+      setError(message);
+    } finally {
+      setIsReviewing(false);
+    }
   }
 
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
-      <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-4xl flex-col justify-center">
-        <header className="mb-10">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-10 pt-8">
           <p className="mb-3 text-sm font-medium uppercase tracking-[0.3em] text-emerald-400">
-            AI-powered SQL review
+            AI-powered static SQL review
           </p>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
@@ -27,7 +50,8 @@ export default function Home() {
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
             Paste your SQL query and receive a structured review focused on
-            readability, performance, maintainability, and best practices.
+            readability, maintainability, best practices, and potential
+            performance risks.
           </p>
         </header>
 
@@ -49,21 +73,34 @@ GROUP BY customer_id;`}
             className="min-h-80 w-full resize-y rounded-xl border border-zinc-700 bg-zinc-950 p-4 font-mono text-sm leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
           />
 
-          <div className="mt-5 flex items-center justify-between gap-4">
-            <p className="text-sm text-zinc-500">
-              Your query is not executed against a database.
+          <div className="mt-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <p className="max-w-2xl text-sm leading-6 text-zinc-500">
+              Query Doctor performs static analysis only. It does not execute
+              your query or inspect your database schema, indexes, statistics,
+              or data distribution.
             </p>
 
             <button
               type="button"
               onClick={handleReview}
-              disabled={!sql.trim()}
-              className="rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
+              disabled={!sql.trim() || isReviewing}
+              className="shrink-0 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
             >
-              Review query
+              {isReviewing ? "Reviewing..." : "Review query"}
             </button>
           </div>
         </section>
+
+        {error && (
+          <p
+            role="alert"
+            className="mt-6 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-300"
+          >
+            {error}
+          </p>
+        )}
+
+        {review && <ReviewResult review={review} />}
       </div>
     </main>
   );
