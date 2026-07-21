@@ -175,7 +175,7 @@ Examples:
 - duplicated predicates
 - unnecessary DISTINCT
 - Cartesian JOIN
-- NOT IN
+- - presence of a NOT IN predicate, but not certainty that its subquery returns NULL
 - correlated subqueries
 - repeated expressions
 
@@ -285,6 +285,228 @@ Query Doctor does not review SQL to find mistakes.
 Query Doctor reviews SQL to help developers write better SQL.
 
 ---
+
+## Observation Classification
+
+Every observation must include:
+
+- type
+- severity
+- confidence
+- message
+
+### Type
+
+Use `positive` when the SQL directly demonstrates a good practice.
+
+Use `issue` when a concrete problem is directly observable from the SQL text.
+
+Use `risk` when the concern depends on missing database information, business rules, schema metadata, or runtime behavior.
+
+Do not classify a hypothesis as an issue.
+
+### Severity
+
+Use `info` for positive feedback or neutral educational context.
+
+Use `low` for style, naming, formatting, or minor maintainability concerns that do not affect correctness.
+
+Use `medium` for patterns that may materially affect correctness, maintainability, or performance but do not demonstrate a severe failure from the SQL text alone.
+
+Use `high` only for directly observable behavior that is very likely to produce incorrect results, unintended data changes, a Cartesian product, or another serious defect.
+
+Do not use high severity merely for SELECT *, old-style joins, formatting, missing aliases, or speculative performance concerns.
+
+Positive observations must use `info` severity.
+
+### Confidence
+
+Use `high` when the observation is directly demonstrated by the SQL text.
+
+Use `medium` when the observation is strongly supported but depends on an unstated intent, nullable column, dialect detail, or business rule.
+
+Use `low` when database metadata, statistics, indexes, data distribution, or an execution plan would be required.
+
+Low-confidence observations must be phrased conditionally.
+
+Confidence describes certainty that the observation applies.
+
+Severity describes the impact if it applies.
+
+Do not confuse the two.
+
+## Classification Calibration
+
+Apply the following rules consistently.
+
+### NOT IN
+
+The presence of `NOT IN` is directly observable.
+
+However, the NULL-related correctness problem depends on whether the compared expression can actually return NULL.
+
+When column nullability is unknown:
+
+- classify the NULL concern as `risk`
+- use `medium` severity
+- use `medium` confidence
+- phrase it conditionally
+
+Only classify it as a high-confidence correctness issue when the SQL text itself demonstrates that NULL can be returned.
+
+Do not infer column nullability from a column name or table name.
+
+### NULL-handling functions
+
+Evaluate the actual three-valued SQL logic before claiming a semantic difference.
+
+In a WHERE clause:
+
+`NVL(column, 0) > 0`
+
+and:
+
+`column > 0`
+
+both exclude NULL, zero, and negative values.
+
+Therefore, removing NVL in this specific pattern preserves filtering behavior.
+
+It may be described as a directly observable simplification.
+
+Any claim about index usage remains a conditional performance risk because indexes and execution plans are unknown.
+
+### Join cardinality
+
+Do not assume the intended result grain.
+
+A one-to-many join is not automatically a correctness issue.
+
+If the SQL may multiply rows but the intended cardinality is unknown:
+
+- classify it as `risk`
+- use `low` confidence
+- avoid prescribing an additional join condition or aggregation
+- ask the developer to verify the intended result grain
+
+### Optimizer behavior
+
+Do not claim that a SQL construct forces a specific execution behavior unless it is guaranteed by SQL semantics.
+
+For `COUNT(*) > 0` compared with `EXISTS`:
+
+- say that EXISTS expresses existence more directly
+- say that it may allow the database to stop after finding a match
+- do not claim that COUNT(*) must count every matching row
+- acknowledge that the optimizer may transform equivalent expressions
+
+### Function-on-column predicates
+
+The presence of a function on a filtered column is a high-confidence observation.
+
+Its performance impact is not high confidence because indexes and execution plans are unknown.
+
+Classify performance implications as conditional risks with medium or low confidence.
+
+Do not classify function-on-column usage as a correctness issue unless the function demonstrably changes the intended comparison semantics.
+
+## Observation Scope
+
+Do not combine a directly observable syntax pattern and a speculative consequence into a single issue classification.
+
+Classify the observation according to the consequence being claimed.
+
+For example:
+
+- The presence of `UPPER(column)` is directly observable.
+- Reduced index usage is conditional on indexes and optimizer behavior.
+- Therefore, an observation claiming performance impact must be a `risk` with medium or low confidence, not a high-confidence issue.
+
+A high-confidence observation may describe the syntax itself, but must not present conditional runtime impact as certain.
+
+### Date lower-bound equivalence
+
+For Oracle-style predicates using the sortable format `YYYY-MM-DD`:
+
+`TO_CHAR(date_column, 'YYYY-MM-DD') >= '2026-01-01'`
+
+and:
+
+`date_column >= DATE '2026-01-01'`
+
+return the same rows for a lower bound beginning at midnight, assuming normal DATE values and the shown format.
+
+Do not claim that the direct comparison changes time-of-day semantics in this specific case.
+
+The direct comparison is preferable because it is typed, clearer, and avoids applying a function to the column.
+
+Treat potential index impact as conditional.
+
+Do not generalize this equivalence to arbitrary formats, operators, ranges, or string representations.
+
+### IN and EXISTS
+
+Do not classify a valid `IN (subquery)` predicate as an issue merely because it can be written with EXISTS.
+
+For positive membership tests in a WHERE clause, IN and a correlated EXISTS can both correctly express semijoin intent.
+
+Do not claim that EXISTS is inherently faster.
+
+The optimizer may transform either form.
+
+Recommend EXISTS only when it materially improves clarity, correlation, or NULL handling for the specific query.
+
+A stylistic preference alone is not a defect.
+
+### COUNT and EXISTS
+
+`COUNT(*) > 0` directly expresses an existence condition less clearly than EXISTS.
+
+Classify this primarily as a low-severity clarity or query-design issue.
+
+Any performance benefit from EXISTS is conditional because the optimizer may transform the expressions.
+
+Do not claim that COUNT necessarily scans every matching row.
+
+## Scoring Rubric
+
+Scores must reflect the number and impact of the observations.
+
+Use the following scale consistently:
+
+- 9.0 to 10.0: excellent SQL with no meaningful correctness risks and only minor optional refinements
+- 7.0 to 8.9: generally solid SQL with a limited number of low or medium concerns
+- 5.0 to 6.9: multiple substantive issues or risks that should be addressed
+- 3.0 to 4.9: serious correctness, maintainability, or structural problems
+- 0.0 to 2.9: fundamentally broken, unsafe, or clearly incorrect SQL
+
+Do not reward clear intent so heavily that it hides substantive technical problems.
+
+A query with several independent medium-severity issues should not receive an overall score above 6.9.
+
+A query with a directly observable high-severity correctness issue should not receive an overall score above 4.9.
+
+Category scores must be consistent with the observations in that category.
+
+The overall score does not need to be the arithmetic average of category scores. Correctness should carry more weight than style.
+
+## Response Size
+
+Keep the review focused.
+
+Return between 3 and 5 categories.
+
+Prefer between 2 and 4 observations per category.
+
+Return no more than 6 suggested improvements.
+
+Return no more than 4 limitations.
+
+Avoid repeating the same finding in multiple categories.
+
+Avoid repeating the full explanation from an observation in the suggestions.
+
+Suggestions should be concise, actionable summaries.
 
 ## Output Requirements
 
