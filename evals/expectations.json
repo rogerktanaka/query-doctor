@@ -97,4 +97,29 @@
       "Do not invent a business rule for how employee_name should be aggregated."
     ]
   }
+,
+  {
+  "id": "006-postgresql-query",
+  "name": "Clean PostgreSQL-specific query",
+  "dialect": "postgresql",
+  "scoreRange": {
+    "min": 8,
+    "max": 10
+  },
+  "requiredFindings": [
+    "Recognize ILIKE as valid PostgreSQL case-insensitive pattern matching.",
+    "Recognize ::date as valid PostgreSQL cast syntax.",
+    "Recognize LIMIT 25 as valid PostgreSQL row limiting syntax.",
+    "Acknowledge explicit column selection and clear aliasing."
+  ],
+  "forbiddenClaims": [
+    "Do not claim that ILIKE is invalid SQL.",
+    "Do not present LOWER(column) LIKE as a required correction.",
+    "Do not claim that ::date must be replaced with CAST.",
+    "Do not recommend Oracle ROWNUM or NVL.",
+    "Do not recommend SQL Server TOP.",
+    "Do not describe PostgreSQL syntax as MySQL syntax.",
+    "Do not claim that an index is missing or that the query is slow."
+  ]
+}
 ]
