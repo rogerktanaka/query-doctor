@@ -2,7 +2,7 @@
 
 ## Current Version
 
-**Version:** 0.1.0  
+**Version:** 0.2.0  
 **Status:** MVP publicly deployed  
 **Production:** https://query-doctor-six.vercel.app
 
@@ -49,41 +49,52 @@ A user must be able to paste a SQL query and receive a structured AI-generated r
 
 # Sprint 002 — Review Quality
 
-**Status:** In progress
+**Status:** Complete  
+**Completed:** 2026-07-21
 
 ## Goal
 
 Improve the usefulness, consistency, and trustworthiness of SQL reviews.
 
-## Already Delivered
+## Delivered Scope
 
 - Improved SQL review system prompt
 - Structured review categories
 - Severity levels
 - Confidence levels
-- Overall score
-- Category scores
-- Improved loading state
+- Overall and category scores
+- Sample SQL query action
+- Improved loading and error states
 - Empty-input validation
 - Maximum-input validation
-- Initial automated evaluation suite
+- Visible character counter and limit feedback
+- Safe user-facing API errors
 - Model quality and latency comparison
 - Selection of GPT-5 for the MVP
+- Reduced speculative recommendations
+- Score calibration for clean and defective SQL
+- Automated evaluation gates
+- Targeted evaluation runs
+- Qualitative evaluation baselines
+- Documented evaluation workflow
+- Production validation on Vercel
 
-## Next Priorities
+## Definition of Done
 
-- Add a sample SQL query action
-- Improve user-facing error messages
-- Improve score calibration
-- Reduce speculative recommendations
-- Expand evaluation coverage
-- Add regression checks for review quality
-- Document the evaluation workflow
-- Validate production latency and reliability
+- [x] Reviews distinguish observable behavior from unknown intent.
+- [x] Directly observable correctness defects receive appropriate severity and confidence.
+- [x] Clean SQL receives positive feedback without forced criticism.
+- [x] Performance claims remain conditional without runtime evidence.
+- [x] Automated checks detect request and scoring regressions.
+- [x] Evaluation results support manual qualitative review.
+- [x] User-facing errors do not expose technical provider details.
+- [x] Sprint improvements are available in production.
 
 ---
 
 # Sprint 003 — Oracle Specialization
+
+**Status:** Planned
 
 ## Goal
 
@@ -92,16 +103,20 @@ Make Query Doctor more useful for Oracle developers.
 ## Candidate Scope
 
 - Oracle SQL review mode
+- Explicit SQL dialect selection
 - PL/SQL review support
 - Oracle-specific best practices
-- Execution plan recommendations
 - Detection of common Oracle anti-patterns
+- Oracle date and NULL-semantics guidance
 - Review guidance for indexes and joins
 - Oracle-specific evaluation cases
+- Execution plan education without inventing plans
 
 ---
 
 # Sprint 004 — Product Validation
+
+**Status:** Planned
 
 ## Goal
 

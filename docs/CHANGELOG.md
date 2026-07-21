@@ -8,12 +8,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Planned
+---
 
-- Continue improving review quality and consistency
-- Improve user-facing error messages
-- Add a sample SQL query
-- Expand the automated evaluation suite
+## [0.2.0] — 2026-07-21
+
+### Added
+
+- Sample SQL query action
+- Visible SQL character counter
+- User feedback when SQL approaches or exceeds the input limit
+- Shared SQL input limit between the interface and API
+- Stable API error codes
+- Automated evaluation pass and fail gates
+- Non-zero evaluation exit codes for regressions
+- Targeted evaluation runs using repeated `--case` options
+- Versioned qualitative evaluation baselines
+
+### Changed
+
+- Improved SQL review prompt for more consistent classifications
+- Reduced speculative NULL, index, sorting, and cardinality observations
+- Improved distinction between observable behavior and unknown author intent
+- Improved NOT IN and NULL-semantics guidance
+- Improved LEFT JOIN semantic analysis
+- Improved aggregation correctness analysis
+- Restricted COUNT-versus-EXISTS recommendations to supported claims
+- Restricted unsafe representative-value aggregate suggestions
+- Improved date and timestamp review guidance
+- Improved score calibration for clean queries and correctness defects
+- Selected GPT-5 with low reasoning effort as the MVP model
+- Updated the evaluation workflow documentation
+
+### Security
+
+- Technical OpenAI errors remain in server logs
+- User-facing responses no longer expose provider or configuration details
+- Network, invalid response, rate-limit, and service failures receive safe messages
+
+### Performance
+
+- Established a 20-second average response-time target for the MVP
+- Added response-time measurement to the evaluation runner
+- Added targeted evaluations to reduce development time and API usage
+
+### Deployment
+
+- Sprint 002 improvements are available at:
+  https://query-doctor-six.vercel.app
 
 ---
 
