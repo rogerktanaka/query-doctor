@@ -92,29 +92,89 @@ Improve the usefulness, consistency, and trustworthiness of SQL reviews.
 
 ---
 
-# Sprint 003 — Oracle Specialization
+# Sprint 003 — Dialect-Aware Reviews
+
+**Status:** Next
+
+## Goal
+
+Allow users to select the target SQL dialect so Query Doctor can provide more accurate syntax and semantics guidance without guessing the database engine.
+
+## Supported Dialect Choices
+
+- Not specified
+- Oracle
+- PostgreSQL
+- SQL Server
+- MySQL
+
+## Planned Scope
+
+- Shared SQL dialect definition
+- Database dialect selector
+- Dialect validation in the API
+- Dialect context passed to the review engine
+- Explicit selected dialect in the AI instructions
+- Selected dialect displayed in the review result
+- Conservative behavior when the dialect is not specified
+- Dialect-specific evaluation cases
+- Cross-dialect contamination tests
+- Updated evaluation runner metadata
+- Updated product documentation
+
+## Definition of Done
+
+- [ ] A user can select a supported SQL dialect.
+- [ ] The selected dialect is validated by the server.
+- [ ] The selected dialect is included in the AI review context.
+- [ ] The review identifies which dialect was used.
+- [ ] Not specified mode does not assume a database engine.
+- [ ] Oracle reviews do not recommend MySQL, PostgreSQL, or T-SQL syntax.
+- [ ] PostgreSQL reviews do not recommend Oracle, MySQL, or T-SQL syntax.
+- [ ] SQL Server reviews do not recommend Oracle, PostgreSQL, or MySQL syntax.
+- [ ] MySQL reviews do not recommend Oracle, PostgreSQL, or T-SQL syntax.
+- [ ] Existing generic evaluation cases continue to pass.
+- [ ] New dialect-specific cases pass automated and qualitative review.
+- [ ] Sprint improvements are available in production.
+
+## Out of Scope
+
+- PL/SQL procedural review
+- T-SQL procedural review
+- PL/pgSQL procedural review
+- MySQL stored-program review
+- Database connections
+- SQL execution
+- Execution-plan analysis
+- Complete specialization for every supported database
+
+---
+
+# Sprint 004 — Oracle Deep Review
 
 **Status:** Planned
 
 ## Goal
 
-Make Query Doctor more useful for Oracle developers.
+Make Query Doctor especially useful for Oracle SQL developers while preserving the multi-dialect architecture.
 
 ## Candidate Scope
 
-- Oracle SQL review mode
-- Explicit SQL dialect selection
-- PL/SQL review support
+- Deeper Oracle SQL review rules
 - Oracle-specific best practices
-- Detection of common Oracle anti-patterns
-- Oracle date and NULL-semantics guidance
-- Review guidance for indexes and joins
-- Oracle-specific evaluation cases
-- Execution plan education without inventing plans
+- Oracle date and timestamp semantics
+- Oracle NULL and empty-string behavior
+- Oracle joins and subquery patterns
+- Oracle analytic functions
+- Oracle pagination patterns
+- Oracle-specific anti-pattern detection
+- Oracle-focused evaluation suite
+- Initial PL/SQL review research
+- Execution-plan education without inventing plans
 
 ---
 
-# Sprint 004 — Product Validation
+# Sprint 005 — Product Validation
 
 **Status:** Planned
 
@@ -130,6 +190,8 @@ Collect feedback from real users and measure whether the product solves a releva
 - Public landing page
 - Product demonstration
 - Initial user testing
+- Dialect usage measurement
+- Qualitative interviews with SQL developers
 
 ---
 
@@ -137,9 +199,9 @@ Collect feedback from real users and measure whether the product solves a releva
 
 These items are not committed and may change based on user feedback.
 
-- PostgreSQL support
-- SQL Server support
-- MySQL support
+- Deeper PostgreSQL specialization
+- Deeper SQL Server specialization
+- Deeper MySQL specialization
 - Query rewrite mode
 - Query comparison
 - Review history
@@ -161,3 +223,6 @@ These items are not committed and may change based on user feedback.
 - Each Sprint must deliver something usable.
 - New features must justify their complexity.
 - MVP scope must remain protected.
+- Dialect-specific claims require explicit dialect context or direct SQL evidence.
+- Broad support must remain conservative until backed by dedicated evaluations.
+- Shared review behavior belongs in the core; database-specific behavior belongs in dialect-aware guidance.
