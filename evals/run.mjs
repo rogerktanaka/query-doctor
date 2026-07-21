@@ -131,7 +131,7 @@ async function runCase(testCase) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sql }),
+        body: JSON.stringify({sql,dialect: testCase.dialect,}),
       },
     );
 

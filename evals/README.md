@@ -21,6 +21,8 @@ The runner automatically verifies:
 - whether the API request completed successfully
 - whether the response contains a numeric overall score
 - whether the score is inside the expected range
+- whether the configured SQL dialect is accepted by the API
+
 
 The process exits with code `1` if any automated check fails.
 
@@ -36,6 +38,8 @@ The following expectations still require manual review:
 - severity and confidence classification
 - semantic safety of suggestions
 - unsupported or speculative claims
+
+Each evaluation case declares the dialect sent to the review API. Use `unspecified` for portable SQL cases that must not assume a database engine.
 
 These expectations are stored in `expectations.json` and copied into each generated result.
 

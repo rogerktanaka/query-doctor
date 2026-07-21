@@ -43,7 +43,7 @@
   {
     "id": "003-left-join-filter",
     "name": "LEFT JOIN filtered in WHERE",
-    "dialect": "generic",
+    "dialect": "unspecified",
     "scoreRange": {
       "min": 6.5,
       "max": 8.5
