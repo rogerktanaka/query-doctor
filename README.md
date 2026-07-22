@@ -2,53 +2,84 @@
 
 Query Doctor is an AI-powered static SQL code review tool.
 
-Instead of simply explaining SQL, Query Doctor reviews a query as if it were part of a professional Pull Request. It focuses on correctness, readability, maintainability, and potential performance risks while clearly separating observable behavior from assumptions that require database context.
+Instead of simply explaining SQL, Query Doctor reviews queries as if they were part of a professional pull request.
 
-## Live Application
+**Production:** https://query-doctor-six.vercel.app
 
-https://query-doctor-six.vercel.app
+## Status
 
-## Current Version
+**Current version:** `0.3.0`
+**Stage:** Dialect-aware Beta
 
-**v0.2.0 — Review Quality**
-
-The MVP is publicly deployed and under active development.
+Query Doctor supports multiple SQL dialect contexts while Oracle remains the first deep technical and commercial specialization.
 
 ## Features
 
-- Structured AI-generated SQL reviews
-- Overall and category scores
-- Correctness and semantic analysis
+- Structured SQL code review
+- Overall review score
+- Correctness and semantics analysis
 - Readability and maintainability analysis
-- Conditional performance-risk analysis
-- Observation severity and confidence levels
-- Positive feedback for good SQL
+- Potential performance-risk analysis
+- Observation severity and confidence
 - Suggested improvements
 - Explicit analysis limitations
-- Sample SQL query
-- Input validation and character-limit feedback
-- Safe user-facing error handling
+- Database dialect selection
+- Input validation and safe user-facing errors
 - Automated evaluation suite
-- Targeted evaluation runs
-- Qualitative model baselines
 
-## Static Analysis Scope
+## Supported Dialect Contexts
 
-Query Doctor analyzes only the supplied SQL text.
+- Not specified
+- Oracle
+- PostgreSQL
+- SQL Server
+- MySQL
+
+Oracle currently has the deepest evaluation coverage.
+
+PostgreSQL, SQL Server, and MySQL support is experimental and may produce speculative recommendations.
+
+## Product Direction
+
+Query Doctor is architecturally multi-dialect, but Oracle is the first deep specialization.
+
+The initial target audience includes:
+
+- Oracle SQL developers
+- PL/SQL developers
+- Oracle consultants
+- Oracle DBAs
+- Technical leads who review Oracle SQL
+- Teams that maintain Oracle-based systems
+
+## How It Works
+
+1. Select the target database dialect.
+2. Paste a SQL statement.
+3. Submit the query for review.
+4. Receive a structured analysis with scores, observations, severity, confidence, suggestions, and limitations.
+
+Query Doctor performs static analysis only.
 
 It does not:
 
-- execute SQL
-- connect to a database
-- inspect schemas or constraints
-- inspect indexes
-- read statistics or data distribution
-- generate or inspect execution plans
-- measure runtime performance
+- execute SQL;
+- connect to a database;
+- inspect schemas automatically;
+- inspect indexes or statistics;
+- generate or inspect execution plans;
+- guarantee runtime performance;
+- replace professional database review.
 
-Performance observations are therefore conditional unless directly supported by the SQL text.
+## Privacy and Responsible Use
 
-## Technology
+Do not submit confidential SQL, credentials, personal data, internal identifiers, proprietary business rules, or customer information.
+
+SQL submitted for review is sent to the application server and processed by the configured AI provider.
+
+Use anonymized or synthetic SQL when evaluating the Beta.
+
+## Technology Stack
 
 - Next.js
 - React
@@ -60,92 +91,7 @@ Performance observations are therefore conditional unless directly supported by 
 
 ## Local Development
 
-Clone the repository:
-
-```bash
-git clone https://github.com/rogerktanaka/query-doctor.git
-cd query-doctor
-```
-
-Install dependencies:
+Install the web application dependencies:
 
 ```bash
 npm --prefix web install
-```
-
-Create `web/.env.local`:
-
-```text
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-5
-```
-
-Do not commit this file or expose the API key in browser code.
-
-Start the development server:
-
-```bash
-npm --prefix web run dev
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-## Validation
-
-Run lint and the production build from the repository root:
-
-```bash
-npm --prefix web run lint
-npm --prefix web run build
-```
-
-## Evaluation Suite
-
-Keep the local application running, then execute all evaluation cases:
-
-```bash
-node evals/run.mjs local
-```
-
-Run a specific case:
-
-```bash
-node evals/run.mjs targeted \
-  --case 001-clean-query
-```
-
-Run multiple selected cases:
-
-```bash
-node evals/run.mjs targeted \
-  --case 001-clean-query \
-  --case 005-invalid-aggregation
-```
-
-The automated gate checks HTTP success and expected score ranges. Required findings and forbidden claims still require qualitative review.
-
-See `evals/README.md` for the complete workflow.
-
-## Project Documentation
-
-- `docs/PRD.md` — product requirements
-- `docs/ROADMAP.md` — delivery roadmap
-- `docs/CHANGELOG.md` — version history
-- `docs/FOUNDING.md` — product and engineering principles
-- `web/prompts/sql-review-system.md` — versioned review prompt
-
-## Security
-
-- The OpenAI API key is used only on the server.
-- Environment files are excluded from Git.
-- Production secrets are stored as Vercel environment variables.
-- Technical provider errors are logged on the server and are not exposed directly to users.
-- SQL input length is limited before AI processing.
-
-## Vision
-
-Help developers write better SQL through concise, trustworthy, and educational code reviews.

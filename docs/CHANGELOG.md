@@ -10,6 +10,62 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.3.0] — 2026-07-22
+
+### Added
+
+- Database dialect selector
+- Shared SQL dialect contract
+- Support for the following dialect contexts:
+  - Not specified
+  - Oracle
+  - PostgreSQL
+  - SQL Server
+  - MySQL
+- Server-side dialect validation
+- Explicit dialect context in AI review instructions
+- Selected dialect display in review results
+- Conservative review mode when no dialect is specified
+- Initial PostgreSQL-specific evaluation case
+- Initial SQL Server-specific evaluation case
+- Initial MySQL-specific evaluation case
+- Cross-dialect contamination assessment
+- Dialect metadata in evaluation results
+- Qualitative baseline for the `v0.3.0` release candidate
+
+### Changed
+
+- Repositioned Query Doctor as a dialect-aware SQL review platform
+- Established Oracle as the first deep technical and commercial specialization
+- Updated the review interface with dialect maturity guidance
+- Updated the evaluation suite from five to eight cases
+- Updated the product roadmap for Oracle-focused review and private Beta validation
+- Preserved conservative review behavior for unsupported or unspecified database details
+
+### Quality
+
+- All eight release-candidate evaluation cases passed their automated score gates
+- Existing clean-query and correctness-defect cases continued to pass
+- No direct cross-dialect syntax contamination was observed in the evaluated cases
+- Oracle-specific behavior remained compatible with existing review-quality rules
+- Average release-candidate response time was 17.992 seconds
+
+### Known Limitations
+
+- Dialect-aware guidance remains a Beta feature
+- Oracle has deeper evaluation coverage than PostgreSQL, SQL Server, and MySQL
+- Experimental dialect reviews may produce speculative ordering, collation, sorting, or index recommendations
+- Qualitative review is still required in addition to automated score gates
+- Stored procedures and procedural SQL are not supported
+- Query conversion between dialects is not part of this release
+
+### Deployment
+
+- Dialect-aware Beta reviews are available at:
+  https://query-doctor-six.vercel.app
+
+---
+
 ## [0.2.0] — 2026-07-21
 
 ### Added

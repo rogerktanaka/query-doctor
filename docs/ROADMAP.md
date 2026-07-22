@@ -2,15 +2,15 @@
 
 ## Current Version
 
-**Version:** 0.2.0  
-**Status:** MVP publicly deployed  
+**Version:** 0.3.0
+**Status:** Dialect-aware Beta publicly deployed
 **Production:** https://query-doctor-six.vercel.app
 
 ---
 
 # Sprint 001 — Foundation
 
-**Status:** Complete  
+**Status:** Complete
 **Completed:** 2026-07-21
 
 ## Goal
@@ -49,7 +49,7 @@ A user must be able to paste a SQL query and receive a structured AI-generated r
 
 # Sprint 002 — Review Quality
 
-**Status:** Complete  
+**Status:** Complete
 **Completed:** 2026-07-21
 
 ## Goal
@@ -94,7 +94,8 @@ Improve the usefulness, consistency, and trustworthiness of SQL reviews.
 
 # Sprint 003 — Dialect-Aware Reviews
 
-**Status:** Next
+**Status:** Complete
+**Completed:** 2026-07-21
 
 ## Goal
 
@@ -108,7 +109,11 @@ Allow users to select the target SQL dialect so Query Doctor can provide more ac
 - SQL Server
 - MySQL
 
-## Planned Scope
+Oracle currently has the deepest evaluation coverage.
+
+PostgreSQL, SQL Server, and MySQL support is experimental.
+
+## Delivered Scope
 
 - Shared SQL dialect definition
 - Database dialect selector
@@ -117,46 +122,62 @@ Allow users to select the target SQL dialect so Query Doctor can provide more ac
 - Explicit selected dialect in the AI instructions
 - Selected dialect displayed in the review result
 - Conservative behavior when the dialect is not specified
-- Dialect-specific evaluation cases
-- Cross-dialect contamination tests
+- Oracle-specific evaluation coverage
+- Initial PostgreSQL evaluation case
+- Initial SQL Server evaluation case
+- Initial MySQL evaluation case
+- Cross-dialect contamination assessment
 - Updated evaluation runner metadata
-- Updated product documentation
+- Beta and dialect-maturity guidance in the interface
+- Production deployment
 
 ## Definition of Done
 
-- [ ] A user can select a supported SQL dialect.
-- [ ] The selected dialect is validated by the server.
-- [ ] The selected dialect is included in the AI review context.
-- [ ] The review identifies which dialect was used.
-- [ ] Not specified mode does not assume a database engine.
-- [ ] Oracle reviews do not recommend MySQL, PostgreSQL, or T-SQL syntax.
-- [ ] PostgreSQL reviews do not recommend Oracle, MySQL, or T-SQL syntax.
-- [ ] SQL Server reviews do not recommend Oracle, PostgreSQL, or MySQL syntax.
-- [ ] MySQL reviews do not recommend Oracle, PostgreSQL, or T-SQL syntax.
-- [ ] Existing generic evaluation cases continue to pass.
-- [ ] New dialect-specific cases pass automated and qualitative review.
-- [ ] Sprint improvements are available in production.
+- [x] A user can select a supported SQL dialect.
+- [x] The selected dialect is validated by the server.
+- [x] The selected dialect is included in the AI review context.
+- [x] The review identifies which dialect was used.
+- [x] Not specified mode does not assume a database engine.
+- [x] Oracle reviews do not recommend MySQL, PostgreSQL, or T-SQL syntax.
+- [x] PostgreSQL reviews do not recommend Oracle, MySQL, or T-SQL syntax.
+- [x] SQL Server reviews do not recommend Oracle, PostgreSQL, or MySQL syntax.
+- [x] MySQL reviews do not recommend Oracle, PostgreSQL, or T-SQL syntax.
+- [x] Existing generic evaluation cases continue to pass.
+- [x] New dialect-specific cases pass automated review.
+- [x] New dialect-specific cases receive qualitative assessment.
+- [x] Sprint improvements are available in production.
 
-## Out of Scope
+## Known Limitations
 
-- PL/SQL procedural review
-- T-SQL procedural review
-- PL/pgSQL procedural review
-- MySQL stored-program review
-- Database connections
-- SQL execution
-- Execution-plan analysis
-- Complete specialization for every supported database
+- Dialect-aware guidance remains a Beta feature.
+- Oracle has deeper evaluation coverage than the other dialects.
+- PostgreSQL, SQL Server, and MySQL reviews may still generate speculative recommendations.
+- Ordering stability, collations, indexes, and sorting may be discussed without sufficient evidence.
+- Dialect-specific claims still require continued evaluation.
+- Stored procedures and procedural SQL are not supported.
 
 ---
 
 # Sprint 004 — Oracle Deep Review
 
-**Status:** Planned
+**Status:** Next
 
 ## Goal
 
 Make Query Doctor especially useful for Oracle SQL developers while preserving the multi-dialect architecture.
+
+## Product Direction
+
+Query Doctor remains architecturally multi-dialect, but Oracle is the first commercial and technical specialization.
+
+The initial target audience is:
+
+- Oracle SQL developers
+- PL/SQL developers
+- Oracle consultants
+- Oracle DBAs
+- Technical leads who review Oracle SQL
+- Teams that maintain Oracle-based systems
 
 ## Candidate Scope
 
@@ -166,11 +187,34 @@ Make Query Doctor especially useful for Oracle SQL developers while preserving t
 - Oracle NULL and empty-string behavior
 - Oracle joins and subquery patterns
 - Oracle analytic functions
-- Oracle pagination patterns
+- Oracle pagination and top-N patterns
 - Oracle-specific anti-pattern detection
-- Oracle-focused evaluation suite
+- Expanded Oracle-focused evaluation suite
 - Initial PL/SQL review research
 - Execution-plan education without inventing plans
+- Preparation for a private Oracle-focused Beta
+- Definition of the first Oracle user-feedback workflow
+
+## Definition of Done
+
+- [ ] Oracle-specific guidance is backed by targeted evaluation cases.
+- [ ] Oracle reviews avoid unsupported schema and performance assumptions.
+- [ ] Common Oracle semantic traps receive appropriate severity and confidence.
+- [ ] Clean Oracle SQL is recognized without forced criticism.
+- [ ] Oracle-specific recommendations preserve observable behavior.
+- [ ] The private Beta audience and testing workflow are documented.
+- [ ] Sprint improvements are available in production.
+
+## Out of Scope
+
+- Complete PL/SQL procedural analysis
+- Database connections
+- SQL execution
+- Execution-plan generation
+- Automatic schema inspection
+- Equal-depth specialization for all dialects
+- Query conversion between dialects
+- Authentication and billing
 
 ---
 
@@ -180,18 +224,40 @@ Make Query Doctor especially useful for Oracle SQL developers while preserving t
 
 ## Goal
 
-Collect feedback from real users and measure whether the product solves a relevant problem.
+Validate whether Oracle professionals find Query Doctor useful enough to adopt repeatedly or pay for.
 
 ## Candidate Scope
 
+- Private Beta with Oracle professionals
 - Feedback mechanism
-- Basic usage analytics
 - Review quality rating
-- Public landing page
-- Product demonstration
-- Initial user testing
-- Dialect usage measurement
-- Qualitative interviews with SQL developers
+- Qualitative interviews
+- Repeat-usage measurement
+- Incorrect-review reporting
+- Basic usage and latency analytics
+- API cost-per-review measurement
+- Willingness-to-pay research
+- Validation of preferred workflow
+- Initial paid-service experiment
+
+## Target Participants
+
+- Oracle developers and consultants
+- PL/SQL developers
+- Oracle DBAs
+- Technical reviewers
+- Small Oracle consulting teams
+- Selected second-degree professional contacts
+
+## Validation Questions
+
+- Is the review technically useful?
+- Does it find issues that generic AI assistants miss?
+- Does it generate incorrect or speculative claims?
+- Would the participant use it again?
+- Where should it be available: web, IDE, CLI, or pull request?
+- Would an individual or company pay for the result?
+- Is the strongest value software, professional review, training, or integration?
 
 ---
 
@@ -202,6 +268,8 @@ These items are not committed and may change based on user feedback.
 - Deeper PostgreSQL specialization
 - Deeper SQL Server specialization
 - Deeper MySQL specialization
+- Oracle-to-SQL Server conversion
+- Additional cross-dialect conversion modes
 - Query rewrite mode
 - Query comparison
 - Review history
@@ -213,6 +281,7 @@ These items are not committed and may change based on user feedback.
 - Database integrations
 - IDE extension
 - GitHub pull request integration
+- PL/SQL procedural review
 
 ---
 
@@ -225,4 +294,8 @@ These items are not committed and may change based on user feedback.
 - MVP scope must remain protected.
 - Dialect-specific claims require explicit dialect context or direct SQL evidence.
 - Broad support must remain conservative until backed by dedicated evaluations.
-- Shared review behavior belongs in the core; database-specific behavior belongs in dialect-aware guidance.
+- Shared review behavior belongs in the core.
+- Database-specific behavior belongs in dialect-aware guidance.
+- Oracle is the first deep specialization and initial validation market.
+- Product validation should begin before extensive feature expansion.
+- Query conversion is a separate future product mode.
