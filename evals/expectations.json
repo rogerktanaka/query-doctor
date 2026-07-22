@@ -227,5 +227,85 @@
       "Do not describe the stated intent as unknown because it is explicitly documented in the SQL comment.",
       "Do not suggest TRIM(c.email) IS NULL OR TRIM(c.email) = '' because whitespace handling was not requested and the equality branch is ineffective in Oracle."
     ]
+  },
+  {
+    "id": "011-oracle-to-date-nls",
+    "name": "Oracle TO_DATE without explicit format",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 7.5,
+      "max": 9
+    },
+    "requiredFindings": [
+      "Recognize that TO_DATE('2026-01-01') without a format model depends on the Oracle session NLS_DATE_FORMAT.",
+      "Explain that parsing may work, fail, or behave differently depending on the session configuration.",
+      "Distinguish the directly observable missing format model from its configuration-dependent outcome.",
+      "Recommend the typed literal DATE '2026-01-01' or TO_DATE('2026-01-01', 'YYYY-MM-DD').",
+      "Preserve the inclusive lower-bound semantics shown by the query."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that the query always raises an Oracle error.",
+      "Do not claim that the supplied string always uses the wrong format.",
+      "Do not invent an upper date boundary.",
+      "Do not claim that the rewrite changes time-of-day semantics.",
+      "Do not recommend PostgreSQL ::date syntax.",
+      "Do not recommend SQL Server CONVERT syntax.",
+      "Do not recommend MySQL STR_TO_DATE.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
+  },
+  {
+    "id": "012-oracle-date-equality",
+    "name": "Oracle DATE equality for a full-day requirement",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 5.5,
+      "max": 7.9
+    },
+    "requiredFindings": [
+      "Recognize that DATE '2026-01-01' represents midnight at the beginning of January 1, 2026.",
+      "Explain that equality matches only rows whose temporal value is exactly that midnight value.",
+      "Connect the predicate behavior to the explicit comment requesting all orders from the entire day.",
+      "Acknowledge that whether non-midnight values exist depends on the column data and schema.",
+      "Recommend the half-open range created_at >= DATE '2026-01-01' AND created_at < DATE '2026-01-02'.",
+      "Explain that the half-open range includes the complete requested day without including midnight of the following day."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that Oracle DATE stores only a calendar date without a time component.",
+      "Do not claim that the query necessarily returns no rows.",
+      "Do not claim that every stored value contains a non-midnight time.",
+      "Do not use BETWEEN DATE '2026-01-01' AND DATE '2026-01-02' as an equivalent full-day correction.",
+      "Do not require TRUNC(created_at) as the only valid correction.",
+      "Do not invent a time zone requirement.",
+      "Do not recommend syntax from another database dialect.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
+  },
+  {
+    "id": "013-oracle-between-day",
+    "name": "Oracle BETWEEN with inclusive next-day boundary",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 4,
+      "max": 7.9
+    },
+    "requiredFindings": [
+      "Recognize that SQL BETWEEN includes both its lower and upper boundaries.",
+      "Explain that DATE '2026-01-02' represents midnight at the beginning of January 2, 2026.",
+      "Explain that the predicate can include rows exactly at midnight on January 2 despite the comment requesting only January 1.",
+      "Do not imply that the predicate includes the entire second day.",
+      "Recommend created_at >= DATE '2026-01-01' AND created_at < DATE '2026-01-02'.",
+      "Explain that the exclusive upper boundary preserves the complete January 1 interval without including the following midnight."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that BETWEEN excludes its upper boundary.",
+      "Do not claim that the query includes every row from January 2.",
+      "Do not claim that the query necessarily returns a January 2 row.",
+      "Do not claim that Oracle DATE stores only a calendar date.",
+      "Do not require TRUNC(created_at) as the only valid correction.",
+      "Do not invent a time-zone requirement.",
+      "Do not recommend syntax from another database dialect.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
   }
 ]

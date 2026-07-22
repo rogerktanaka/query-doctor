@@ -16,6 +16,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Second Oracle Deep Review evaluation case
 - Oracle empty-string and NULL-semantics regression coverage
 - Qualitative baseline for Oracle empty-string review behavior
+- Third Oracle Deep Review evaluation case
+- Oracle TO_DATE and NLS_DATE_FORMAT regression coverage
+- Qualitative baseline for Oracle NLS-dependent date parsing
+- Fourth Oracle Deep Review evaluation case
+- Oracle DATE equality and whole-day filtering regression coverage
+- Qualitative baseline for Oracle half-open date-range guidance
 - Token-usage and estimated-cost instrumentation for SQL reviews
 - Per-case and aggregate cost metrics in the evaluation runner
 - Cost-monitoring and unit-economics documentation
@@ -37,6 +43,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Documented probabilistic variation in secondary recommendations
 - Added the tenth automated SQL review evaluation case
 - Completed a targeted Oracle NULL-semantics regression with two passing cases
+- Qualitatively accepted the Oracle TO_DATE review after recalibrating its score range
+- Recorded token usage and estimated cost for the third Oracle Deep Review case
+- Validated Oracle whole-day filtering with a half-open date range
+- Recorded the first evaluation with substantial cached-input usage
+- Validated the inclusive upper boundary of Oracle temporal BETWEEN
+- Recorded the lowest estimated evaluation cost observed so far
 - Captured the first measured review-cost benchmark at approximately US$0.0195
 - Verified cost instrumentation with a passing clean-query smoke evaluation
 

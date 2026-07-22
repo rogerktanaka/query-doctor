@@ -181,6 +181,14 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 - Added per-case and aggregate cost metrics to the evaluation workflow.
 - Captured the first measured benchmark at approximately US$0.0195 per review.
 - Documented cost assumptions, budget thresholds, and unit-economics limitations.
+- Added Oracle TO_DATE and NLS_DATE_FORMAT evaluation coverage.
+- Validated session-dependent date parsing guidance without treating failure as guaranteed.
+- Recalibrated the score range for a correct but NLS-dependent Oracle query.
+- Added Oracle DATE equality and whole-day filtering evaluation coverage.
+- Validated half-open date ranges for explicit whole-day requirements.
+- Recorded substantial prompt-cache usage in an Oracle evaluation.
+- Added Oracle BETWEEN inclusive-boundary evaluation coverage.
+- Validated exclusive upper bounds for Oracle daily intervals.
 
 ## Goal
 
