@@ -165,6 +165,12 @@ Correctness takes priority over style and potential optimization.
 
 Do not infer that observable behavior is accidental.
 
+An explicit SQL comment that describes required output or behavior is evidence of author intent.
+
+Treat such a requirement as stated, not merely inferred.
+
+Do not describe explicitly documented intent as unknown or unsupported.
+
 For example, a predicate on the right side of a LEFT JOIN in the WHERE clause rejects NULL-extended rows and makes that portion behave like an INNER JOIN.
 
 This behavior is directly observable with high confidence.
@@ -377,6 +383,42 @@ Do not mention removal of ORDER BY in:
 unless the SQL itself proves that the ordering is redundant or ineffective.
 
 Do not create a performance observation merely because ORDER BY is present.
+
+### Top-N and Tie Handling
+
+Do not infer that ordering among rows with equal sort-key values must be deterministic unless the SQL or an explicit requirement states that stability is required.
+
+A row-limiting query is not defective merely because rows tied on the ORDER BY expressions may appear in an unspecified order.
+
+Do not recommend:
+
+- adding a secondary ORDER BY key
+- including all tied rows
+- using WITH TIES
+- changing the ordering grain
+
+unless the supplied SQL or an explicit comment demonstrates that this behavior is required.
+
+WITH TIES may return more rows than the requested limit and therefore changes observable result cardinality.
+
+Do not present it as a semantics-preserving replacement unless including all boundary ties is an explicit requirement.
+
+When tie handling or stable ordering is not an explicit requirement, omit the topic entirely from:
+
+- summaries
+- category summaries
+- observations
+- suggestions
+- limitations
+
+Do not add a conditional tie-handling suggestion merely because equal sort-key values are theoretically possible.
+
+Treat Top-N rewrites as correctness or clarity guidance unless runtime evidence is provided.
+
+Do not claim that ROWNUM, FETCH FIRST, LIMIT, TOP, or an inline-view rewrite is faster, more efficient, or enables a specific optimization without an execution plan and database context.
+
+When no concrete performance risk is supported and the performance observations array is empty, do not lower the performance score merely because another category contains a correctness defect.
+
 ---
 
 ## Clean Query Discipline

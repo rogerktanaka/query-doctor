@@ -96,79 +96,108 @@
       "Do not focus primarily on indexes or performance.",
       "Do not invent a business rule for how employee_name should be aggregated."
     ]
-  }
-,
+  },
   {
-  "id": "006-postgresql-query",
-  "name": "Clean PostgreSQL-specific query",
-  "dialect": "postgresql",
-  "scoreRange": {
-    "min": 8,
-    "max": 10
+    "id": "006-postgresql-query",
+    "name": "Clean PostgreSQL-specific query",
+    "dialect": "postgresql",
+    "scoreRange": {
+      "min": 8,
+      "max": 10
+    },
+    "requiredFindings": [
+      "Recognize ILIKE as valid PostgreSQL case-insensitive pattern matching.",
+      "Recognize ::date as valid PostgreSQL cast syntax.",
+      "Recognize LIMIT 25 as valid PostgreSQL row limiting syntax.",
+      "Acknowledge explicit column selection and clear aliasing."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that ILIKE is invalid SQL.",
+      "Do not present LOWER(column) LIKE as a required correction.",
+      "Do not claim that ::date must be replaced with CAST.",
+      "Do not recommend Oracle ROWNUM or NVL.",
+      "Do not recommend SQL Server TOP.",
+      "Do not describe PostgreSQL syntax as MySQL syntax.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
   },
-  "requiredFindings": [
-    "Recognize ILIKE as valid PostgreSQL case-insensitive pattern matching.",
-    "Recognize ::date as valid PostgreSQL cast syntax.",
-    "Recognize LIMIT 25 as valid PostgreSQL row limiting syntax.",
-    "Acknowledge explicit column selection and clear aliasing."
-  ],
-  "forbiddenClaims": [
-    "Do not claim that ILIKE is invalid SQL.",
-    "Do not present LOWER(column) LIKE as a required correction.",
-    "Do not claim that ::date must be replaced with CAST.",
-    "Do not recommend Oracle ROWNUM or NVL.",
-    "Do not recommend SQL Server TOP.",
-    "Do not describe PostgreSQL syntax as MySQL syntax.",
-    "Do not claim that an index is missing or that the query is slow."
-  ]
-}
-,
-{
-  "id": "007-sqlserver-query",
-  "name": "Clean SQL Server-specific query",
-  "dialect": "sqlserver",
-  "scoreRange": {
-    "min": 8,
-    "max": 10
+  {
+    "id": "007-sqlserver-query",
+    "name": "Clean SQL Server-specific query",
+    "dialect": "sqlserver",
+    "scoreRange": {
+      "min": 8,
+      "max": 10
+    },
+    "requiredFindings": [
+      "Recognize TOP (25) as valid SQL Server row limiting syntax.",
+      "Recognize dbo as a conventional SQL Server schema.",
+      "Recognize N'ana%' as a valid SQL Server Unicode string literal.",
+      "Recognize CAST(created_at AS date) as valid SQL Server syntax.",
+      "Acknowledge explicit column selection and clear aliasing."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that TOP is invalid SQL.",
+      "Do not recommend replacing TOP with LIMIT.",
+      "Do not recommend Oracle ROWNUM.",
+      "Do not recommend PostgreSQL ILIKE or ::date syntax.",
+      "Do not describe SQL Server syntax as MySQL syntax.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
   },
-  "requiredFindings": [
-    "Recognize TOP (25) as valid SQL Server row limiting syntax.",
-    "Recognize dbo as a conventional SQL Server schema.",
-    "Recognize N'ana%' as a valid SQL Server Unicode string literal.",
-    "Recognize CAST(created_at AS date) as valid SQL Server syntax.",
-    "Acknowledge explicit column selection and clear aliasing."
-  ],
-  "forbiddenClaims": [
-    "Do not claim that TOP is invalid SQL.",
-    "Do not recommend replacing TOP with LIMIT.",
-    "Do not recommend Oracle ROWNUM.",
-    "Do not recommend PostgreSQL ILIKE or ::date syntax.",
-    "Do not describe SQL Server syntax as MySQL syntax.",
-    "Do not claim that an index is missing or that the query is slow."
-  ]
-}
-,
-{
-  "id": "008-mysql-query",
-  "name": "Clean MySQL-specific query",
-  "dialect": "mysql",
-  "scoreRange": {
-    "min": 8,
-    "max": 10
+  {
+    "id": "008-mysql-query",
+    "name": "Clean MySQL-specific query",
+    "dialect": "mysql",
+    "scoreRange": {
+      "min": 8,
+      "max": 10
+    },
+    "requiredFindings": [
+      "Recognize backtick-quoted identifiers as valid MySQL syntax.",
+      "Recognize DATE(created_at) as valid MySQL date extraction syntax.",
+      "Recognize LIMIT 25 as valid MySQL row limiting syntax.",
+      "Acknowledge explicit column selection and clear aliasing."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that backtick quoting is invalid SQL.",
+      "Do not recommend replacing LIMIT with SQL Server TOP.",
+      "Do not recommend Oracle ROWNUM.",
+      "Do not recommend PostgreSQL ILIKE or ::date syntax.",
+      "Do not require CAST(created_at AS date) as a correction.",
+      "Do not claim that an index is missing or that the query is slow."
+    ]
   },
-  "requiredFindings": [
-    "Recognize backtick-quoted identifiers as valid MySQL syntax.",
-    "Recognize DATE(created_at) as valid MySQL date extraction syntax.",
-    "Recognize LIMIT 25 as valid MySQL row limiting syntax.",
-    "Acknowledge explicit column selection and clear aliasing."
-  ],
-  "forbiddenClaims": [
-    "Do not claim that backtick quoting is invalid SQL.",
-    "Do not recommend replacing LIMIT with SQL Server TOP.",
-    "Do not recommend Oracle ROWNUM.",
-    "Do not recommend PostgreSQL ILIKE or ::date syntax.",
-    "Do not require CAST(created_at AS date) as a correction.",
-    "Do not claim that an index is missing or that the query is slow."
-  ]
-}
+  {
+    "id": "009-oracle-rownum-order",
+    "name": "Oracle ROWNUM applied before ORDER BY",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 0,
+      "max": 4.9
+    },
+    "requiredFindings": [
+      "Recognize that ROWNUM <= 10 is applied before ORDER BY in the same Oracle query block.",
+      "Explain that the query selects up to 10 rows first and only then sorts those selected rows.",
+      "Explain that the query does not guarantee the 10 employees with the highest salaries.",
+      "Classify the mismatch with the explicitly stated intent as a high-confidence correctness issue.",
+      "Recommend ordering in an inline view before applying ROWNUM in an outer query, or mention a version-appropriate Oracle row-limiting alternative conditionally."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that ROWNUM syntax is invalid.",
+      "Do not claim that the query necessarily raises an Oracle error.",
+      "Do not claim that ORDER BY is ignored.",
+      "Do not claim that ROWNUM is assigned after ORDER BY in this query block.",
+      "Do not recommend PostgreSQL or MySQL LIMIT.",
+      "Do not recommend SQL Server TOP.",
+      "Do not assume that the Oracle version supports FETCH FIRST.",
+      "Do not claim that an index is missing or that the query is slow.",
+      "Do not invent a requirement for deterministic ordering among employees with equal salaries.",
+      "Do not recommend adding a secondary ORDER BY key without an explicit stability requirement.",
+      "Do not recommend WITH TIES when the stated requirement asks for exactly 10 employees.",
+      "Do not mention tie handling or deterministic ordering even conditionally when no such requirement is stated.",
+      "Do not describe the top-10 intent as merely inferred because it is explicitly stated in the SQL comment.",
+      "Do not claim that a replacement Top-N syntax enables a performance optimization without execution-plan evidence."
+    ]
+  }
 ]

@@ -8,7 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
----
+### Added
+
+- First Oracle Deep Review evaluation case
+- Oracle ROWNUM and ORDER BY Top-N regression coverage
+- Qualitative baseline for Oracle Top-N review behavior
+
+### Changed
+
+- Improved recognition of explicit intent documented in SQL comments
+- Reduced unsupported tie-handling and deterministic-ordering recommendations
+- Restricted unsupported performance claims for Top-N rewrites
+
+### Quality
+
+- Added the ninth automated SQL review evaluation case
+- Completed a nine-case regression with all automated score gates passing
+- Documented probabilistic variation in secondary recommendations
 
 ## [0.3.0] — 2026-07-22
 

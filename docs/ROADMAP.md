@@ -160,7 +160,17 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 
 # Sprint 004 — Oracle Deep Review
 
-**Status:** Next
+**Status:** In progress
+**Started:** 2026-07-22
+
+## Progress
+
+- Added the first Oracle Deep Review evaluation case.
+- Validated Oracle Top-N behavior involving ROWNUM and ORDER BY.
+- Added evidence-based guidance for explicit SQL comments.
+- Reduced unsupported tie-handling and deterministic-ordering recommendations.
+- Completed a nine-case regression run with all automated gates passing.
+- Documented remaining variability in speculative performance recommendations.
 
 ## Goal
 
