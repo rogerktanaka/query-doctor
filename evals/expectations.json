@@ -307,5 +307,38 @@
       "Do not recommend syntax from another database dialect.",
       "Do not claim that an index is missing or that the query is slow."
     ]
+  },
+  {
+    "id": "014-oracle-clean-analytic-cte",
+    "name": "Clean Oracle analytic query with CTE",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 8,
+      "max": 10
+    },
+    "requiredFindings": [
+      "Recognize the WITH clause as valid Oracle subquery factoring or CTE syntax.",
+      "Recognize ROW_NUMBER() OVER as a valid Oracle analytic function.",
+      "Explain that PARTITION BY customer_id restarts row numbering for each customer.",
+      "Recognize that filtering row_number = 1 returns the first ranked row for each customer.",
+      "Acknowledge that the supplied comment states created_at is NOT NULL and order_id is unique.",
+      "Acknowledge the explicit secondary ordering by the unique order_id.",
+      "Acknowledge the explicit column selection and clear aliases."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that the CTE must be replaced with a subquery.",
+      "Do not claim that ROW_NUMBER requires GROUP BY.",
+      "Do not recommend ROWNUM for this per-customer ranking.",
+      "Do not recommend PostgreSQL DISTINCT ON.",
+      "Do not recommend SQL Server TOP.",
+      "Do not recommend MySQL LIMIT.",
+      "Do not claim that DISTINCT is required.",
+      "Do not question NULL created_at handling because the supplied comment states created_at is NOT NULL.",
+      "Do not question ordering determinism because the supplied comment states order_id is unique.",
+      "Do not create a performance concern merely because ROW_NUMBER uses PARTITION BY and ORDER BY.",
+      "Do not invent sorting, memory, temporary-space, index, or data-volume problems.",
+      "Do not recommend KEEP, aggregation, or another ranking strategy when the supplied query is already correct.",
+      "Do not claim that the query is slow."
+    ]
   }
 ]

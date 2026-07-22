@@ -189,6 +189,9 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 - Recorded substantial prompt-cache usage in an Oracle evaluation.
 - Added Oracle BETWEEN inclusive-boundary evaluation coverage.
 - Validated exclusive upper bounds for Oracle daily intervals.
+- Added clean Oracle CTE and analytic-function evaluation coverage.
+- Reduced forced performance criticism for correct analytic SQL.
+- Validated empty suggestions and performance findings for a clean Oracle query.
 
 ## Goal
 

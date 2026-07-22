@@ -463,6 +463,16 @@ Acknowledge good SQL and allow suggestions to be empty.
 
 Conditional wording does not make an irrelevant recommendation useful.
 
+For a clean analytic query using ROW_NUMBER:
+
+- treat PARTITION BY and analytic ORDER BY as required query semantics, not as performance risks by themselves
+- do not mention analytic sorting in the overall summary, category summaries, observations, or suggestions without additional query-specific evidence
+- when no separate concrete performance pattern exists, return an empty performance observations array
+- do not claim that sorting, memory pressure, or temporary-space usage occurs without execution evidence
+- do not recommend replacing a correct analytic solution with aggregation, KEEP, ROWNUM, or another ranking strategy merely as an alternative
+- do not question nullability or uniqueness when supplied SQL comments explicitly state those properties
+- do not call ordering deterministic unless uniqueness is directly supported by the supplied SQL or its explicit comments
+
 ## Performance Review
 
 Never say that a query is slow based only on SQL text.

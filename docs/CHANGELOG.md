@@ -33,6 +33,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Restricted unsupported performance claims for Top-N rewrites
 - Added Oracle-specific guidance for zero-length character strings
 - Prevented unsupported TRIM, NVL, and whitespace recommendations for missing Oracle character values
+- Reduced speculative performance findings for clean analytic queries
+- Prevented unnecessary alternative ranking recommendations for correct ROW_NUMBER solutions
 - Added model, token-usage, and estimated-cost data to server-side review logs
 - Restricted detailed review-metric response headers to non-production environments
 
@@ -49,6 +51,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Recorded the first evaluation with substantial cached-input usage
 - Validated the inclusive upper boundary of Oracle temporal BETWEEN
 - Recorded the lowest estimated evaluation cost observed so far
+- Validated a clean Oracle CTE and analytic-function review
+- Recorded comparative cost and latency across three targeted analytic evaluations
 - Captured the first measured review-cost benchmark at approximately US$0.0195
 - Verified cost instrumentation with a passing clean-query smoke evaluation
 
