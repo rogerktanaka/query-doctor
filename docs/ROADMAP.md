@@ -2,8 +2,8 @@
 
 ## Current Version
 
-**Version:** 0.3.0
-**Status:** Dialect-aware Beta publicly deployed
+**Version:** 0.4.1
+**Status:** Oracle Deep Review Beta publicly deployed
 **Production:** https://query-doctor-six.vercel.app
 
 ---

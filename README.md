@@ -8,7 +8,7 @@ Instead of simply explaining SQL, Query Doctor reviews queries as if they were p
 
 ## Status
 
-**Current version:** `0.4.0`
+**Current version:** `0.4.1`
 **Stage:** Oracle Deep Review Beta
 
 Query Doctor supports multiple SQL dialect contexts while Oracle remains the first deep technical and commercial specialization.

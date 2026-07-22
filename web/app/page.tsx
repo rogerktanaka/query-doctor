@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ReviewResult } from "@/components/ReviewResult";
 import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
 import {
-  DEFAULT_SQL_DIALECT,
   isSqlDialect,
   SQL_DIALECT_OPTIONS,
   type SqlDialect,
@@ -31,7 +30,7 @@ export default function Home() {
   const [sql, setSql] = useState("");
   const [dialect, setDialect] =
     useState<SqlDialect>(
-      DEFAULT_SQL_DIALECT,
+      "oracle",
     );
   const [review, setReview] =
     useState<ReviewResultType | null>(null);
@@ -165,8 +164,8 @@ export default function Home() {
             </select>
 
             <p className="mt-2 text-xs leading-5 text-zinc-500">
-              Dialect-aware guidance is experimental. Oracle currently has
-              the deepest evaluation coverage.
+              Oracle is preselected for this Beta. Other dialects remain
+              experimental.
             </p>
           </div>
 

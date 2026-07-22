@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.1] — 2026-07-22
+
+### Changed
+
+- Preselected Oracle as the initial database dialect in the Beta interface
+- Updated interface guidance to clarify that other dialects remain experimental
+- Preserved Not specified and all other dialect options
+- Preserved unspecified as the conservative API fallback when no dialect is supplied
+
+### Deployment
+
+- Oracle-first Beta interface available at:
+  https://query-doctor-six.vercel.app
+
+
 ## [0.4.0] — 2026-07-22
 
 ### Added
