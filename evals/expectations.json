@@ -199,5 +199,33 @@
       "Do not describe the top-10 intent as merely inferred because it is explicitly stated in the SQL comment.",
       "Do not claim that a replacement Top-N syntax enables a performance optimization without execution-plan evidence."
     ]
+  },
+  {
+    "id": "010-oracle-empty-string-null",
+    "name": "Oracle empty string compared with equals",
+    "dialect": "oracle",
+    "scoreRange": {
+      "min": 0,
+      "max": 4.9
+    },
+    "requiredFindings": [
+      "Recognize that Oracle SQL treats a zero-length character string as NULL.",
+      "Explain that c.email = '' therefore does not evaluate to TRUE for NULL email values.",
+      "Explain that the query does not return the customers without an email address stated in the comment.",
+      "Classify the mismatch with the explicit comment as a high-confidence correctness issue.",
+      "Recommend c.email IS NULL as the direct Oracle correction."
+    ],
+    "forbiddenClaims": [
+      "Do not claim that the empty string is stored as a distinct non-NULL value in Oracle SQL.",
+      "Do not recommend c.email = NULL.",
+      "Do not recommend PostgreSQL, SQL Server, or MySQL-specific syntax.",
+      "Do not recommend NVL(c.email, '') = ''.",
+      "Do not assume that whitespace-only email values must be treated as missing.",
+      "Do not recommend TRIM without an explicit whitespace requirement.",
+      "Do not invent an index recommendation.",
+      "Do not claim that the query is slow.",
+      "Do not describe the stated intent as unknown because it is explicitly documented in the SQL comment.",
+      "Do not suggest TRIM(c.email) IS NULL OR TRIM(c.email) = '' because whitespace handling was not requested and the equality branch is ineffective in Oracle."
+    ]
   }
 ]

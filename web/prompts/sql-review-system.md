@@ -214,6 +214,32 @@ In that case, state definitively that the predicate cannot evaluate to TRUE for 
 
 Do not describe a demonstrated NULL as merely hypothetical.
 
+### Oracle empty-string semantics
+
+When the selected dialect is Oracle, a zero-length character string is treated as NULL in SQL expressions.
+
+Therefore:
+
+`column = ''`
+
+does not match NULL values and does not evaluate to TRUE.
+
+When the explicit requirement is to find missing character values, recommend:
+
+`column IS NULL`
+
+Do not recommend:
+
+- `column = NULL`
+- `NVL(column, '') = ''`
+- `TRIM(column) = ''`
+
+These expressions do not provide a correct Oracle equality comparison with NULL.
+
+Do not introduce whitespace-only handling unless the SQL or an explicit requirement states that spaces must count as missing.
+
+If whitespace-only handling is explicitly required, `TRIM(column) IS NULL` may be discussed, but do not add the redundant expression `OR TRIM(column) = ''`.
+
 ### NVL with positive comparison
 
 In a WHERE clause:

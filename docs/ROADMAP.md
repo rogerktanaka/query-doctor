@@ -161,6 +161,7 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 # Sprint 004 — Oracle Deep Review
 
 **Status:** In progress
+
 **Started:** 2026-07-22
 
 ## Progress
@@ -171,6 +172,11 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 - Reduced unsupported tie-handling and deterministic-ordering recommendations.
 - Completed a nine-case regression run with all automated gates passing.
 - Documented remaining variability in speculative performance recommendations.
+- Added Oracle empty-string and NULL-semantics evaluation coverage.
+- Validated that Oracle `column = ''` does not match missing values.
+- Added focused guidance recommending `IS NULL` for missing Oracle character values.
+- Completed a targeted regression against clean Oracle SQL and demonstrable NOT IN NULL behavior.
+- Recorded the initial OpenAI API budget snapshot for evaluation-cost tracking.
 
 ## Goal
 

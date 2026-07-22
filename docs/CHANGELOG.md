@@ -13,18 +13,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - First Oracle Deep Review evaluation case
 - Oracle ROWNUM and ORDER BY Top-N regression coverage
 - Qualitative baseline for Oracle Top-N review behavior
+- Second Oracle Deep Review evaluation case
+- Oracle empty-string and NULL-semantics regression coverage
+- Qualitative baseline for Oracle empty-string review behavior
 
 ### Changed
 
 - Improved recognition of explicit intent documented in SQL comments
 - Reduced unsupported tie-handling and deterministic-ordering recommendations
 - Restricted unsupported performance claims for Top-N rewrites
+- Added Oracle-specific guidance for zero-length character strings
+- Prevented unsupported TRIM, NVL, and whitespace recommendations for missing Oracle character values
 
 ### Quality
 
 - Added the ninth automated SQL review evaluation case
 - Completed a nine-case regression with all automated score gates passing
 - Documented probabilistic variation in secondary recommendations
+- Added the tenth automated SQL review evaluation case
+- Completed a targeted Oracle NULL-semantics regression with two passing cases
 
 ## [0.3.0] — 2026-07-22
 
