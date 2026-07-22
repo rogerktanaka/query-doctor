@@ -8,7 +8,9 @@ import {
   SQL_DIALECTS,
 } from "@/lib/review/sqlDialect";
 
-function getErrorStatus(error: unknown): number | null {
+function getErrorStatus(
+  error: unknown,
+): number | null {
   if (
     typeof error === "object" &&
     error !== null &&
@@ -31,7 +33,8 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        error: "The request body must contain valid JSON.",
+        error:
+          "The request body must contain valid JSON.",
         code: "INVALID_JSON",
       },
       { status: 400 },
@@ -59,7 +62,8 @@ export async function POST(request: Request) {
   if (sql.length > MAX_SQL_LENGTH) {
     return NextResponse.json(
       {
-        error: `SQL query must not exceed ${MAX_SQL_LENGTH.toLocaleString("en-US")} characters.`,
+        error:
+          `SQL query must not exceed ${MAX_SQL_LENGTH.toLocaleString("en-US")} characters.`,
         code: "SQL_TOO_LONG",
       },
       { status: 413 },
@@ -74,7 +78,8 @@ export async function POST(request: Request) {
   if (!isSqlDialect(dialectCandidate)) {
     return NextResponse.json(
       {
-        error: `SQL dialect must be one of: ${SQL_DIALECTS.join(", ")}.`,
+        error:
+          `SQL dialect must be one of: ${SQL_DIALECTS.join(", ")}.`,
         code: "INVALID_DIALECT",
       },
       { status: 400 },
@@ -82,19 +87,112 @@ export async function POST(request: Request) {
   }
 
   try {
-    const review = await reviewSql(sql,dialectCandidate,);
-    const durationMs = Date.now() - startedAt;
+    const {
+      review,
+      metadata,
+    } = await reviewSql(
+      sql,
+      dialectCandidate,
+    );
 
-    console.info(`SQL review completed in ${durationMs}ms.`);
+    const durationMs =
+      Date.now() - startedAt;
+
+    console.info(
+      "SQL review completed.",
+      {
+        durationMs,
+        dialect: dialectCandidate,
+        model: metadata.model,
+        usage: metadata.usage,
+        estimatedCostUsd:
+          metadata.estimatedCostUsd,
+        pricingEffectiveDate:
+          metadata.pricingEffectiveDate,
+      },
+    );
+
+    const headers: Record<string, string> = {
+      "Server-Timing":
+        `sql-review;dur=${durationMs}`,
+    };
+
+    const exposeReviewMetrics =
+      process.env.NODE_ENV !==
+      "production";
+
+    if (exposeReviewMetrics) {
+      headers[
+        "X-Query-Doctor-Model"
+      ] = metadata.model;
+
+      if (metadata.usage !== null) {
+      headers[
+        "X-Query-Doctor-Input-Tokens"
+      ] = String(
+        metadata.usage.inputTokens,
+      );
+
+      headers[
+        "X-Query-Doctor-Cached-Input-Tokens"
+      ] = String(
+        metadata.usage.cachedInputTokens,
+      );
+
+      headers[
+        "X-Query-Doctor-Cache-Write-Tokens"
+      ] = String(
+        metadata.usage.cacheWriteTokens,
+      );
+
+      headers[
+        "X-Query-Doctor-Output-Tokens"
+      ] = String(
+        metadata.usage.outputTokens,
+      );
+
+      headers[
+        "X-Query-Doctor-Reasoning-Tokens"
+      ] = String(
+        metadata.usage.reasoningTokens,
+      );
+
+        headers[
+          "X-Query-Doctor-Total-Tokens"
+        ] = String(
+          metadata.usage.totalTokens,
+        );
+      }
+
+      if (
+        metadata.estimatedCostUsd !== null
+      ) {
+      headers[
+        "X-Query-Doctor-Estimated-Cost-USD"
+      ] =
+        metadata.estimatedCostUsd.toFixed(8);
+    }
+
+      if (
+        metadata.pricingEffectiveDate !==
+        null
+      ) {
+        headers[
+          "X-Query-Doctor-Pricing-Effective-Date"
+        ] =
+          metadata.pricingEffectiveDate;
+      }
+    }
 
     return NextResponse.json(review, {
-      headers: {
-        "Server-Timing": `sql-review;dur=${durationMs}`,
-      },
+      headers,
     });
   } catch (error) {
-    const durationMs = Date.now() - startedAt;
-    const upstreamStatus = getErrorStatus(error);
+    const durationMs =
+      Date.now() - startedAt;
+
+    const upstreamStatus =
+      getErrorStatus(error);
 
     console.error(
       `SQL review failed after ${durationMs}ms:`,

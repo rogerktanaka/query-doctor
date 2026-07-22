@@ -177,6 +177,10 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 - Added focused guidance recommending `IS NULL` for missing Oracle character values.
 - Completed a targeted regression against clean Oracle SQL and demonstrable NOT IN NULL behavior.
 - Recorded the initial OpenAI API budget snapshot for evaluation-cost tracking.
+- Added token-usage and estimated-cost instrumentation for SQL reviews.
+- Added per-case and aggregate cost metrics to the evaluation workflow.
+- Captured the first measured benchmark at approximately US$0.0195 per review.
+- Documented cost assumptions, budget thresholds, and unit-economics limitations.
 
 ## Goal
 

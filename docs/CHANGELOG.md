@@ -16,6 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Second Oracle Deep Review evaluation case
 - Oracle empty-string and NULL-semantics regression coverage
 - Qualitative baseline for Oracle empty-string review behavior
+- Token-usage and estimated-cost instrumentation for SQL reviews
+- Per-case and aggregate cost metrics in the evaluation runner
+- Cost-monitoring and unit-economics documentation
 
 ### Changed
 
@@ -24,6 +27,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Restricted unsupported performance claims for Top-N rewrites
 - Added Oracle-specific guidance for zero-length character strings
 - Prevented unsupported TRIM, NVL, and whitespace recommendations for missing Oracle character values
+- Added model, token-usage, and estimated-cost data to server-side review logs
+- Restricted detailed review-metric response headers to non-production environments
 
 ### Quality
 
@@ -32,6 +37,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Documented probabilistic variation in secondary recommendations
 - Added the tenth automated SQL review evaluation case
 - Completed a targeted Oracle NULL-semantics regression with two passing cases
+- Captured the first measured review-cost benchmark at approximately US$0.0195
+- Verified cost instrumentation with a passing clean-query smoke evaluation
 
 ## [0.3.0] — 2026-07-22
 

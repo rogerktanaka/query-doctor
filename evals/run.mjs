@@ -1,10 +1,20 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  readFile,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const currentFile = fileURLToPath(import.meta.url);
-const evalsDirectory = path.dirname(currentFile);
-const projectDirectory = path.dirname(evalsDirectory);
+const currentFile = fileURLToPath(
+  import.meta.url,
+);
+
+const evalsDirectory =
+  path.dirname(currentFile);
+
+const projectDirectory =
+  path.dirname(evalsDirectory);
 
 const casesDirectory = path.join(
   evalsDirectory,
@@ -78,6 +88,140 @@ async function loadExpectations() {
   return JSON.parse(contents);
 }
 
+function parseIntegerHeader(
+  response,
+  headerName,
+) {
+  const value =
+    response.headers.get(headerName);
+
+  if (value === null) {
+    return null;
+  }
+
+  const parsed = Number.parseInt(
+    value,
+    10,
+  );
+
+  if (
+    !Number.isFinite(parsed) ||
+    parsed < 0
+  ) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function parseDecimalHeader(
+  response,
+  headerName,
+) {
+  const value =
+    response.headers.get(headerName);
+
+  if (value === null) {
+    return null;
+  }
+
+  const parsed = Number.parseFloat(value);
+
+  if (
+    !Number.isFinite(parsed) ||
+    parsed < 0
+  ) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function readApiMetrics(response) {
+  const model =
+    response.headers.get(
+      "x-query-doctor-model",
+    );
+
+  const inputTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-input-tokens",
+    );
+
+  const cachedInputTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-cached-input-tokens",
+    );
+
+  const cacheWriteTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-cache-write-tokens",
+    );
+
+  const outputTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-output-tokens",
+    );
+
+  const reasoningTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-reasoning-tokens",
+    );
+
+  const totalTokens =
+    parseIntegerHeader(
+      response,
+      "x-query-doctor-total-tokens",
+    );
+
+  const usageValues = [
+    inputTokens,
+    cachedInputTokens,
+    cacheWriteTokens,
+    outputTokens,
+    reasoningTokens,
+    totalTokens,
+  ];
+
+  const usage =
+    usageValues.every(
+      (value) =>
+        typeof value === "number",
+    )
+      ? {
+          inputTokens,
+          cachedInputTokens,
+          cacheWriteTokens,
+          outputTokens,
+          reasoningTokens,
+          totalTokens,
+        }
+      : null;
+
+  const estimatedCostUsd =
+    parseDecimalHeader(
+      response,
+      "x-query-doctor-estimated-cost-usd",
+    );
+
+  const pricingEffectiveDate =
+    response.headers.get(
+      "x-query-doctor-pricing-effective-date",
+    );
+
+  return {
+    model,
+    usage,
+    estimatedCostUsd,
+    pricingEffectiveDate,
+  };
+}
+
 function evaluateResult(result) {
   const failures = [];
 
@@ -120,7 +264,11 @@ async function runCase(testCase) {
     `${testCase.id}.sql`,
   );
 
-  const sql = await readFile(sqlPath, "utf8");
+  const sql = await readFile(
+    sqlPath,
+    "utf8",
+  );
+
   const startedAt = performance.now();
 
   try {
@@ -129,9 +277,13 @@ async function runCase(testCase) {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
-        body: JSON.stringify({sql,dialect: testCase.dialect,}),
+        body: JSON.stringify({
+          sql,
+          dialect: testCase.dialect,
+        }),
       },
     );
 
@@ -139,15 +291,22 @@ async function runCase(testCase) {
       performance.now() - startedAt,
     );
 
-    const responseText = await response.text();
+    const apiMetrics =
+      readApiMetrics(response);
+
+    const responseText =
+      await response.text();
 
     let payload;
 
     try {
-      payload = JSON.parse(responseText);
+      payload = JSON.parse(
+        responseText,
+      );
     } catch {
       payload = {
-        error: "Response was not valid JSON.",
+        error:
+          "Response was not valid JSON.",
         rawResponse: responseText,
       };
     }
@@ -159,20 +318,25 @@ async function runCase(testCase) {
       durationMs,
       httpStatus: response.status,
       success: response.ok,
-      expectedScoreRange: testCase.scoreRange,
+      expectedScoreRange:
+        testCase.scoreRange,
       actualScore:
         response.ok &&
-        typeof payload.overallScore === "number"
+        typeof payload.overallScore ===
+          "number"
           ? payload.overallScore
           : null,
+      apiMetrics,
       expectations: {
         requiredFindings:
           testCase.requiredFindings,
         forbiddenClaims:
           testCase.forbiddenClaims,
       },
-      review: response.ok ? payload : null,
-      error: response.ok ? null : payload,
+      review:
+        response.ok ? payload : null,
+      error:
+        response.ok ? null : payload,
     };
 
     return {
@@ -191,8 +355,10 @@ async function runCase(testCase) {
       durationMs,
       httpStatus: null,
       success: false,
-      expectedScoreRange: testCase.scoreRange,
+      expectedScoreRange:
+        testCase.scoreRange,
       actualScore: null,
+      apiMetrics: null,
       expectations: {
         requiredFindings:
           testCase.requiredFindings,
@@ -217,7 +383,9 @@ async function runCase(testCase) {
 
 async function ensureServerAvailable() {
   try {
-    const response = await fetch(baseUrl);
+    const response = await fetch(
+      baseUrl,
+    );
 
     if (!response.ok) {
       throw new Error(
@@ -241,6 +409,138 @@ async function ensureServerAvailable() {
   }
 }
 
+function createMetricsSummary(
+  successfulResults,
+) {
+  const meteredResults =
+    successfulResults.filter(
+      (result) =>
+        result.apiMetrics?.usage !==
+        null &&
+        result.apiMetrics?.usage !==
+        undefined,
+    );
+
+  const pricedResults =
+    successfulResults.filter(
+      (result) =>
+        typeof result.apiMetrics
+          ?.estimatedCostUsd ===
+        "number",
+    );
+
+  const models = [
+    ...new Set(
+      successfulResults
+        .map(
+          (result) =>
+            result.apiMetrics?.model,
+        )
+        .filter(Boolean),
+    ),
+  ];
+
+  const pricingEffectiveDates = [
+    ...new Set(
+      successfulResults
+        .map(
+          (result) =>
+            result.apiMetrics
+              ?.pricingEffectiveDate,
+        )
+        .filter(Boolean),
+    ),
+  ];
+
+  const tokenUsage =
+    meteredResults.length > 0
+      ? meteredResults.reduce(
+          (total, result) => {
+            const usage =
+              result.apiMetrics.usage;
+
+            return {
+              inputTokens:
+                total.inputTokens +
+                usage.inputTokens,
+              cachedInputTokens:
+                total.cachedInputTokens +
+                usage.cachedInputTokens,
+              cacheWriteTokens:
+                total.cacheWriteTokens +
+                usage.cacheWriteTokens,
+              outputTokens:
+                total.outputTokens +
+                usage.outputTokens,
+              reasoningTokens:
+                total.reasoningTokens +
+                usage.reasoningTokens,
+              totalTokens:
+                total.totalTokens +
+                usage.totalTokens,
+            };
+          },
+          {
+            inputTokens: 0,
+            cachedInputTokens: 0,
+            cacheWriteTokens: 0,
+            outputTokens: 0,
+            reasoningTokens: 0,
+            totalTokens: 0,
+          },
+        )
+      : null;
+
+  const totalEstimatedCostUsd =
+    pricedResults.length > 0
+      ? Number(
+          pricedResults
+            .reduce(
+              (total, result) =>
+                total +
+                result.apiMetrics
+                  .estimatedCostUsd,
+              0,
+            )
+            .toFixed(8),
+        )
+      : null;
+
+  const averageEstimatedCostUsd =
+    totalEstimatedCostUsd !== null
+      ? Number(
+          (
+            totalEstimatedCostUsd /
+            pricedResults.length
+          ).toFixed(8),
+        )
+      : null;
+
+  return {
+    meteredResults:
+      meteredResults.length,
+    unmeteredResults:
+      successfulResults.length -
+      meteredResults.length,
+    pricedResults:
+      pricedResults.length,
+    unpricedResults:
+      successfulResults.length -
+      pricedResults.length,
+    models,
+    pricingEffectiveDates,
+    tokenUsage,
+    totalEstimatedCostUsd,
+    averageEstimatedCostUsd,
+  };
+}
+
+function formatCostUsd(value) {
+  return typeof value === "number"
+    ? `$${value.toFixed(6)}`
+    : "-";
+}
+
 async function main() {
   const {
     runLabel,
@@ -252,13 +552,14 @@ async function main() {
   const allExpectations =
     await loadExpectations();
 
-  const unknownCaseIds = caseIds.filter(
-    (caseId) =>
-      !allExpectations.some(
-        (testCase) =>
-          testCase.id === caseId,
-      ),
-  );
+  const unknownCaseIds =
+    caseIds.filter(
+      (caseId) =>
+        !allExpectations.some(
+          (testCase) =>
+            testCase.id === caseId,
+        ),
+    );
 
   if (unknownCaseIds.length > 0) {
     throw new Error(
@@ -275,7 +576,9 @@ async function main() {
       ? allExpectations
       : allExpectations.filter(
           (testCase) =>
-            caseIds.includes(testCase.id),
+            caseIds.includes(
+              testCase.id,
+            ),
         );
 
   await ensureServerAvailable();
@@ -286,7 +589,9 @@ async function main() {
     `Running ${expectations.length} evaluation cases against ${baseUrl}`,
   );
 
-  console.log(`Run label: ${runLabel}`);
+  console.log(
+    `Run label: ${runLabel}`,
+  );
 
   if (caseIds.length > 0) {
     console.log(
@@ -303,7 +608,9 @@ async function main() {
       `Running ${testCase.id}: ${testCase.name}`,
     );
 
-    const result = await runCase(testCase);
+    const result =
+      await runCase(testCase);
+
     results.push(result);
 
     const score =
@@ -311,16 +618,35 @@ async function main() {
         ? "-"
         : result.actualScore.toFixed(1);
 
-    const status = result.evaluation.passed
-      ? "PASS"
-      : "FAIL";
+    const status =
+      result.evaluation.passed
+        ? "PASS"
+        : "FAIL";
+
+    const tokens =
+      result.apiMetrics?.usage
+        ?.totalTokens;
+
+    const cost =
+      result.apiMetrics
+        ?.estimatedCostUsd;
+
+    const metricsText =
+      typeof tokens === "number"
+        ? ` — tokens ${tokens} — cost ${formatCostUsd(cost)}`
+        : "";
 
     console.log(
-      `Completed in ${result.durationMs}ms — status ${result.httpStatus ?? "error"} — score ${score} — ${status}`,
+      `Completed in ${result.durationMs}ms — status ${result.httpStatus ?? "error"} — score ${score} — ${status}${metricsText}`,
     );
 
-    for (const failure of result.evaluation.failures) {
-      console.log(`  - ${failure}`);
+    for (
+      const failure of
+        result.evaluation.failures
+    ) {
+      console.log(
+        `  - ${failure}`,
+      );
     }
 
     console.log("");
@@ -328,37 +654,52 @@ async function main() {
 
   const completedAt = new Date();
 
-  const successfulResults = results.filter(
-    (result) => result.success,
-  );
+  const successfulResults =
+    results.filter(
+      (result) => result.success,
+    );
 
-  const passedResults = results.filter(
-    (result) => result.evaluation.passed,
-  );
+  const passedResults =
+    results.filter(
+      (result) =>
+        result.evaluation.passed,
+    );
 
-  const failedResults = results.filter(
-    (result) => !result.evaluation.passed,
-  );
+  const failedResults =
+    results.filter(
+      (result) =>
+        !result.evaluation.passed,
+    );
 
   const averageDurationMs =
     successfulResults.length > 0
       ? Math.round(
           successfulResults.reduce(
             (total, result) =>
-              total + result.durationMs,
+              total +
+              result.durationMs,
             0,
-          ) / successfulResults.length,
+          ) /
+            successfulResults.length,
         )
       : null;
+
+  const metricsSummary =
+    createMetricsSummary(
+      successfulResults,
+    );
 
   const run = {
     label: runLabel,
     baseUrl,
     projectDirectory,
-    startedAt: startedAt.toISOString(),
-    completedAt: completedAt.toISOString(),
+    startedAt:
+      startedAt.toISOString(),
+    completedAt:
+      completedAt.toISOString(),
     selectedCaseIds: caseIds,
     averageDurationMs,
+    metricsSummary,
     summary: {
       total: results.length,
       passed: passedResults.length,
@@ -391,12 +732,26 @@ async function main() {
   console.table(
     results.map((result) => ({
       id: result.id,
-      result: result.evaluation.passed
-        ? "PASS"
-        : "FAIL",
-      status: result.httpStatus ?? "error",
+      result:
+        result.evaluation.passed
+          ? "PASS"
+          : "FAIL",
+      status:
+        result.httpStatus ?? "error",
       durationMs: result.durationMs,
-      score: result.actualScore ?? "-",
+      score:
+        result.actualScore ?? "-",
+      tokens:
+        result.apiMetrics?.usage
+          ?.totalTokens ?? "-",
+      costUsd:
+        typeof result.apiMetrics
+          ?.estimatedCostUsd ===
+        "number"
+          ? result.apiMetrics
+              .estimatedCostUsd
+              .toFixed(6)
+          : "-",
       expected:
         `${result.expectedScoreRange.min}-${result.expectedScoreRange.max}`,
     })),
@@ -406,6 +761,44 @@ async function main() {
     `Average duration: ${averageDurationMs ?? "-"}ms`,
   );
 
+  if (
+    metricsSummary.tokenUsage !==
+    null
+  ) {
+    console.log(
+      `Token usage: ${metricsSummary.tokenUsage.totalTokens} total ` +
+        `(${metricsSummary.tokenUsage.inputTokens} input, ` +
+        `${metricsSummary.tokenUsage.cachedInputTokens} cached input, ` +
+        `${metricsSummary.tokenUsage.outputTokens} output, ` +
+        `${metricsSummary.tokenUsage.reasoningTokens} reasoning).`,
+    );
+  } else {
+    console.log(
+      "Token usage: unavailable.",
+    );
+  }
+
+  console.log(
+    `Estimated cost: ${formatCostUsd(metricsSummary.totalEstimatedCostUsd)} total, ` +
+      `${formatCostUsd(metricsSummary.averageEstimatedCostUsd)} average per priced review.`,
+  );
+
+  if (
+    metricsSummary.unmeteredResults > 0
+  ) {
+    console.log(
+      `Usage metrics unavailable for ${metricsSummary.unmeteredResults} successful result(s).`,
+    );
+  }
+
+  if (
+    metricsSummary.unpricedResults > 0
+  ) {
+    console.log(
+      `Cost estimate unavailable for ${metricsSummary.unpricedResults} successful result(s).`,
+    );
+  }
+
   console.log(
     `Automated checks: ${passedResults.length} passed, ${failedResults.length} failed.`,
   );
@@ -414,7 +807,9 @@ async function main() {
     "Qualitative review of required findings and forbidden claims is still required.",
   );
 
-  console.log(`Results saved to ${resultPath}`);
+  console.log(
+    `Results saved to ${resultPath}`,
+  );
 
   if (failedResults.length > 0) {
     process.exitCode = 1;
@@ -422,6 +817,10 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("Evaluation run failed:", error);
+  console.error(
+    "Evaluation run failed:",
+    error,
+  );
+
   process.exitCode = 1;
 });

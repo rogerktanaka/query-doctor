@@ -26,6 +26,7 @@ Query Doctor supports multiple SQL dialect contexts while Oracle remains the fir
 - Database dialect selection
 - Input validation and safe user-facing errors
 - Automated evaluation suite
+- Token-usage and estimated-cost monitoring
 
 ## Supported Dialect Contexts
 
@@ -70,6 +71,23 @@ It does not:
 - generate or inspect execution plans;
 - guarantee runtime performance;
 - replace professional database review.
+
+## Cost Monitoring
+
+Query Doctor records token usage and estimated AI-provider cost in server-side logs.
+
+The local evaluation runner also records per-review and aggregate usage metrics, including:
+
+- input and output tokens;
+- cached input tokens;
+- reasoning tokens;
+- total token usage;
+- estimated cost per review;
+- estimated cost for the complete evaluation run.
+
+Detailed metric headers are available only in non-production environments. Cost calculations are estimates and may differ from the provider invoice.
+
+See [Cost Monitoring and Unit Economics](docs/COSTS.md) for pricing assumptions, budget thresholds, and the initial benchmark.
 
 ## Privacy and Responsible Use
 

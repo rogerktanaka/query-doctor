@@ -1,4 +1,5 @@
 import { zodTextFormat } from "openai/helpers/zod";
+import type { ResponseUsage } from "openai/resources/responses/responses";
 
 import {
   ReviewResultSchema,
@@ -17,6 +18,17 @@ import {
   getOpenAIModel,
 } from "./openai";
 import { loadPrompt } from "./promptLoader";
+import {
+  estimateReviewCostUsd,
+  REVIEW_PRICING_EFFECTIVE_DATE,
+  type ReviewExecutionMetadata,
+  type ReviewTokenUsage,
+} from "./reviewMetrics";
+
+export interface SqlReviewExecution {
+  review: ReviewResult;
+  metadata: ReviewExecutionMetadata;
+}
 
 function buildDialectInstructions(
   dialect: SqlDialect,
@@ -51,10 +63,28 @@ function buildDialectInstructions(
   ].join("\n");
 }
 
+function mapResponseUsage(
+  usage: ResponseUsage,
+): ReviewTokenUsage {
+  return {
+    inputTokens: usage.input_tokens,
+    cachedInputTokens:
+      usage.input_tokens_details.cached_tokens,
+    cacheWriteTokens:
+      usage.input_tokens_details
+        .cache_write_tokens,
+    outputTokens: usage.output_tokens,
+    reasoningTokens:
+      usage.output_tokens_details
+        .reasoning_tokens,
+    totalTokens: usage.total_tokens,
+  };
+}
+
 export async function reviewSql(
   sql: string,
   dialect: SqlDialect = DEFAULT_SQL_DIALECT,
-): Promise<ReviewResult> {
+): Promise<SqlReviewExecution> {
   const normalizedSql = sql.trim();
 
   if (!normalizedSql) {
@@ -116,18 +146,43 @@ export async function reviewSql(
   });
 
   if (!response.output_parsed) {
-    console.error("Structured review parsing failed:", {
-      status: response.status,
-      incompleteDetails: response.incomplete_details,
-      output: response.output,
-    });
+    console.error(
+      "Structured review parsing failed:",
+      {
+        status: response.status,
+        incompleteDetails:
+          response.incomplete_details,
+        output: response.output,
+      },
+    );
 
     throw new Error(
       `OpenAI returned no structured SQL review. Status: ${response.status}.`,
     );
   }
 
-  return validateReviewResult(
+  const review = validateReviewResult(
     response.output_parsed,
   );
+
+  const usage = response.usage
+    ? mapResponseUsage(response.usage)
+    : null;
+
+  const estimatedCostUsd = usage
+    ? estimateReviewCostUsd(model, usage)
+    : null;
+
+  return {
+    review,
+    metadata: {
+      model,
+      usage,
+      estimatedCostUsd,
+      pricingEffectiveDate:
+        estimatedCostUsd === null
+          ? null
+          : REVIEW_PRICING_EFFECTIVE_DATE,
+    },
+  };
 }
