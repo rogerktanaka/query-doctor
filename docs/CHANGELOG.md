@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-07-22
+
 ### Added
 
 - First Oracle Deep Review evaluation case
@@ -22,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Fourth Oracle Deep Review evaluation case
 - Oracle DATE equality and whole-day filtering regression coverage
 - Qualitative baseline for Oracle half-open date-range guidance
+- Fifth Oracle Deep Review evaluation case covering inclusive BETWEEN boundaries
+- Sixth Oracle Deep Review evaluation case covering clean CTE and analytic SQL
+- Consolidated v0.4.0 release-candidate evaluation baseline
+- Private Oracle Beta workflow and success criteria
 - Token-usage and estimated-cost instrumentation for SQL reviews
 - Per-case and aggregate cost metrics in the evaluation runner
 - Cost-monitoring and unit-economics documentation
@@ -55,6 +61,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Recorded comparative cost and latency across three targeted analytic evaluations
 - Captured the first measured review-cost benchmark at approximately US$0.0195
 - Verified cost instrumentation with a passing clean-query smoke evaluation
+- Completed the fourteen-case v0.4.0 release-candidate regression with all automated gates passing
+- Completed focused post-regression validation for Oracle date semantics
+- Measured US$0.014756 average estimated cost per review in the full release-candidate regression
+- Accepted v0.4.0-rc1 after automated and qualitative review
+
+### Release Validation
+
+- Fourteen automated evaluation cases passed
+- Oracle-specific prompt changes passed focused regression checks
+- Clean Oracle analytic SQL produced no forced performance findings or suggestions
+- Detailed token and cost metrics were captured
+
+### Known Limitations
+
+- Average release-candidate latency was 24.446 seconds
+- Individual AI responses remain probabilistic
+- Qualitative assessment remains necessary in addition to score gates
+- PL/SQL procedural analysis is not included
+- PostgreSQL, SQL Server, and MySQL have shallower coverage than Oracle
+
+### Deployment
+
+- Oracle Deep Review Beta is available at:
+  https://query-doctor-six.vercel.app
+
+---
 
 ## [0.3.0] — 2026-07-22
 

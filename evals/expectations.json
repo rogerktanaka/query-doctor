@@ -15,7 +15,8 @@
     "forbiddenClaims": [
       "Do not claim that an index is missing.",
       "Do not claim that the query is slow.",
-      "Do not invent schema or cardinality problems."
+      "Do not invent schema or cardinality problems.",
+      "Do not invent a full-calendar-year requirement or recommend an upper date boundary."
     ]
   },
   {
@@ -251,7 +252,8 @@
       "Do not recommend PostgreSQL ::date syntax.",
       "Do not recommend SQL Server CONVERT syntax.",
       "Do not recommend MySQL STR_TO_DATE.",
-      "Do not claim that an index is missing or that the query is slow."
+      "Do not claim that an index is missing or that the query is slow.",
+      "Do not recommend TIMESTAMP literals or time-of-day handling without an explicit requirement."
     ]
   },
   {
@@ -259,7 +261,7 @@
     "name": "Oracle DATE equality for a full-day requirement",
     "dialect": "oracle",
     "scoreRange": {
-      "min": 5.5,
+      "min": 4,
       "max": 7.9
     },
     "requiredFindings": [
@@ -278,7 +280,8 @@
       "Do not require TRUNC(created_at) as the only valid correction.",
       "Do not invent a time zone requirement.",
       "Do not recommend syntax from another database dialect.",
-      "Do not claim that an index is missing or that the query is slow."
+      "Do not claim that an index is missing or that the query is slow.",
+      "Do not describe Oracle DATE as a date-only type or as a DATE without time."
     ]
   },
   {

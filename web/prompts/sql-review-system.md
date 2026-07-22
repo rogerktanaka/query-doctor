@@ -284,6 +284,16 @@ When the supplied SQL uses a typed DATE literal but does not explicitly show tim
 
 Unknown column data type alone is not sufficient evidence for a time zone observation or suggestion.
 
+Oracle DATE always supports a time-of-day component through seconds.
+
+Never describe Oracle DATE as a date-only type or as a DATE without time.
+
+Stored DATE values may be normalized to midnight by application rules, constraints, or data conventions, but that possibility is about the stored values, not the Oracle DATE type.
+
+When an explicit SQL comment states a since, from, or on-or-after lower-bound requirement, do not invent a full-year requirement, end date, or upper boundary.
+
+Do not suggest TIMESTAMP literals, time-of-day values, or time-zone handling unless the supplied SQL or explicit requirement provides evidence that they are needed.
+
 Do not generalize this equivalence to arbitrary formats, operators, ranges, timestamps with time zones, or string representations.
 
 ---

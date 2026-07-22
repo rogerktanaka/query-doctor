@@ -160,9 +160,11 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 
 # Sprint 004 — Oracle Deep Review
 
-**Status:** In progress
+**Status:** Complete
 
 **Started:** 2026-07-22
+
+**Completed:** 2026-07-22
 
 ## Progress
 
@@ -192,6 +194,10 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 - Added clean Oracle CTE and analytic-function evaluation coverage.
 - Reduced forced performance criticism for correct analytic SQL.
 - Validated empty suggestions and performance findings for a clean Oracle query.
+- Completed the fourteen-case v0.4.0 release-candidate regression.
+- Completed focused regression checks after final Oracle date-guidance improvements.
+- Documented the private Oracle Beta audience, workflow, metrics, and success criteria.
+- Accepted v0.4.0-rc1 as the technical release candidate.
 
 ## Goal
 
@@ -228,13 +234,13 @@ The initial target audience is:
 
 ## Definition of Done
 
-- [ ] Oracle-specific guidance is backed by targeted evaluation cases.
-- [ ] Oracle reviews avoid unsupported schema and performance assumptions.
-- [ ] Common Oracle semantic traps receive appropriate severity and confidence.
-- [ ] Clean Oracle SQL is recognized without forced criticism.
-- [ ] Oracle-specific recommendations preserve observable behavior.
-- [ ] The private Beta audience and testing workflow are documented.
-- [ ] Sprint improvements are available in production.
+- [x] Oracle-specific guidance is backed by targeted evaluation cases.
+- [x] Oracle reviews avoid unsupported schema and performance assumptions.
+- [x] Common Oracle semantic traps receive appropriate severity and confidence.
+- [x] Clean Oracle SQL is recognized without forced criticism.
+- [x] Oracle-specific recommendations preserve observable behavior.
+- [x] The private Beta audience and testing workflow are documented.
+- [x] Sprint improvements are available in production.
 
 ## Out of Scope
 

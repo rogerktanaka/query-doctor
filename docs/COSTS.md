@@ -65,3 +65,26 @@ estimated cost =
   uncached input tokens × input price / 1,000,000
   + cached input tokens × cached input price / 1,000,000
   + output tokens × output price / 1,000,000
+
+---
+
+## v0.4.0 Release-Candidate Benchmark
+
+The complete fourteen-case regression produced:
+
+| Metric | Value |
+|---|---:|
+| Reviews | 14 |
+| Average duration | 24.446s |
+| Total tokens | 71,229 |
+| Cached input tokens | 46,080 |
+| Estimated total cost | US$0.206579 |
+| Estimated average cost | US$0.014756 |
+
+Approximately 89% of input tokens were served from cache.
+
+The final focused date-regression gates cost an additional US$0.083543.
+
+Total estimated cost of the complete and focused final release gates was US$0.290122.
+
+These measurements are evaluation evidence, not guaranteed production pricing or latency.

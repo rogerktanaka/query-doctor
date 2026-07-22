@@ -8,8 +8,8 @@ Instead of simply explaining SQL, Query Doctor reviews queries as if they were p
 
 ## Status
 
-**Current version:** `0.3.0`
-**Stage:** Dialect-aware Beta
+**Current version:** `0.4.0`
+**Stage:** Oracle Deep Review Beta
 
 Query Doctor supports multiple SQL dialect contexts while Oracle remains the first deep technical and commercial specialization.
 
@@ -43,6 +43,10 @@ PostgreSQL, SQL Server, and MySQL support is experimental and may produce specul
 ## Product Direction
 
 Query Doctor is architecturally multi-dialect, but Oracle is the first deep specialization.
+
+The current release adds deeper Oracle coverage for NULL semantics, temporal boundaries, Top-N queries, CTEs, and analytic functions.
+
+See [Private Oracle Beta](docs/PRIVATE_BETA.md) for the testing workflow, success criteria, and participant guidance.
 
 The initial target audience includes:
 
