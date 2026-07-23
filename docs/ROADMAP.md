@@ -255,46 +255,97 @@ The initial target audience is:
 
 ---
 
-# Sprint 005 — Product Validation
+# Sprint 005 — Public Beta Validation
 
-**Status:** Planned
+**Status:** In progress
+
+**Started:** 2026-07-23
 
 ## Goal
 
-Validate whether Oracle professionals find Query Doctor useful enough to adopt repeatedly or pay for.
+Validate who finds recurring value in Query Doctor, for which review workflow, and under what conditions, through a controlled, safe, and measurable public Beta.
+
+## Validation Strategy
+
+Expand validation beyond the initial Oracle Retail and integration cohort while preserving Oracle as the deepest technical specialization.
+
+The Beta should recruit participants across different:
+
+- database dialects;
+- professional roles;
+- SQL and PL/SQL use cases;
+- experience levels;
+- review workflows.
 
 ## Candidate Scope
 
-- Private Beta with Oracle professionals
-- Feedback mechanism
-- Review quality rating
+- Public Beta information and recruitment page
+- In-product usefulness feedback
+- Optional incorrect-review reporting
+- Anonymous session identification
+- Privacy-preserving aggregate metrics
+- Review completion, dialect, latency, and cost measurement
+- Per-session and global usage limits
+- Daily cost protection
+- Controlled Beta pause mechanism
+- Gradual participant recruitment
 - Qualitative interviews
 - Repeat-usage measurement
-- Incorrect-review reporting
-- Basic usage and latency analytics
-- API cost-per-review measurement
+- Preferred-workflow validation
+- PL/SQL and revised-code demand validation
 - Willingness-to-pay research
-- Validation of preferred workflow
-- Initial paid-service experiment
 
-## Target Participants
+## Initial Participant Segments
 
-- Oracle developers and consultants
-- PL/SQL developers
-- Oracle DBAs
-- Technical reviewers
-- Small Oracle consulting teams
-- Selected second-degree professional contacts
+- Oracle SQL and PL/SQL developers
+- Oracle integration developers
+- Oracle DBAs and technical reviewers
+- PostgreSQL developers
+- SQL Server developers
+- MySQL developers
+- Data engineers and data analysts
+- Technical consultants outside Oracle Retail
 
 ## Validation Questions
 
 - Is the review technically useful?
-- Does it find issues that generic AI assistants miss?
+- Does it identify material issues?
 - Does it generate incorrect or speculative claims?
 - Would the participant use it again?
-- Where should it be available: web, IDE, CLI, or pull request?
+- Does the participant expect revised code as part of the review?
+- Is SQL review sufficient, or is PL/SQL support required?
+- Where should the tool be available: web, IDE, CLI, or pull request?
+- Which professional and database segments perceive the most value?
 - Would an individual or company pay for the result?
-- Is the strongest value software, professional review, training, or integration?
+- Can expected revenue support review costs?
+
+## Definition of Done
+
+- [x] Public Beta purpose, audience, limits, and success criteria are documented.
+- [ ] Participants receive clear privacy and confidentiality guidance.
+- [ ] Submitted SQL is not stored by the Beta telemetry layer.
+- [ ] Review feedback can be submitted from the application.
+- [ ] Review usage, latency, dialect, and estimated cost can be measured.
+- [ ] Abuse and accidental budget consumption have basic protections.
+- [ ] The Beta can be paused without a code deployment.
+- [ ] At least 15 participants complete a review.
+- [ ] At least three professional profiles are represented.
+- [ ] At least three database contexts are represented.
+- [ ] At least five participants provide qualitative feedback.
+- [ ] Repeat-use intent and revised-code demand are measured.
+- [ ] Sprint 006 direction is documented from observed evidence.
+
+## Out of Scope
+
+- Complete PL/SQL procedural analysis
+- Production-ready automatic code rewriting
+- Authentication and user accounts
+- Billing and paid subscriptions
+- Storing submitted SQL
+- Equal-depth specialization for every dialect
+- Paid acquisition campaigns
+- IDE and pull-request integrations
+- Sophisticated analytics dashboards
 
 ---
 

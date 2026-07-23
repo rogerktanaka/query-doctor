@@ -46,7 +46,9 @@ Query Doctor is architecturally multi-dialect, but Oracle is the first deep spec
 
 The current release adds deeper Oracle coverage for NULL semantics, temporal boundaries, Top-N queries, CTEs, and analytic functions.
 
-See [Private Oracle Beta](docs/PRIVATE_BETA.md) for the testing workflow, success criteria, and participant guidance.
+See [Controlled Public Beta](docs/PUBLIC_BETA.md) for the current validation plan, safety rules, operating limits, and success criteria.
+
+The initial validation workflow remains documented in [Private Oracle Beta](docs/PRIVATE_BETA.md).
 
 The initial target audience includes:
 

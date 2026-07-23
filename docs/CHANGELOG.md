@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Planning
+
+- Started Sprint 005 — Public Beta Validation
+- Expanded validation beyond the initial Oracle Retail and integration cohort
+- Defined controlled public-Beta safety, measurement, and recruitment goals
+- Added PL/SQL and revised-code demand as explicit validation hypotheses
+- Added the controlled public Beta operating plan
+- Defined participant segments, rollout stages, success criteria, and pause conditions
+- Preserved the initial private Oracle Beta as the first validation cohort
+
 ## [0.4.1] — 2026-07-22
 
 ### Changed
