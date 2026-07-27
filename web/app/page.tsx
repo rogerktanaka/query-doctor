@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 import { ReviewResult } from "@/components/ReviewResult";
@@ -29,9 +30,7 @@ ORDER BY
 export default function Home() {
   const [sql, setSql] = useState("");
   const [dialect, setDialect] =
-    useState<SqlDialect>(
-      "oracle",
-    );
+    useState<SqlDialect>("oracle");
   const [review, setReview] =
     useState<ReviewResultType | null>(null);
   const [isReviewing, setIsReviewing] =
@@ -118,9 +117,23 @@ export default function Home() {
             AI-powered static SQL review
           </p>
 
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
-            QueryMend
-          </h1>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Image
+              src="/querymend-mark.svg"
+              alt=""
+              width={64}
+              height={64}
+              priority
+              className="h-10 w-10 sm:h-16 sm:w-16"
+            />
+
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-6xl">
+              <span>Query</span>
+              <span className="text-emerald-500">
+                Mend
+              </span>
+            </h1>
+          </div>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
             Paste your SQL query and receive a structured review focused on
@@ -139,7 +152,7 @@ export default function Home() {
                 Database dialect
               </label>
 
-              <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-violet-300">
+              <span className="rounded-full border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-zinc-300">
                 Beta
               </span>
             </div>

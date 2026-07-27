@@ -12,12 +12,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Custom production domain at https://querymend.com
 - Permanent redirect from https://www.querymend.com to the canonical domain
+- QueryMend visual identity with a custom split-Q symbol
+- Branded application icon and favicon
 
 ### Changed
 
 - Renamed the product from Query Doctor to QueryMend
 - Updated the application interface, metadata, system prompt, and current documentation to use the QueryMend brand
 - Defined https://querymend.com as the canonical production URL
+- Applied the QueryMend emerald and off-white brand palette to the application header
+- Replaced the violet Beta badge with a neutral treatment to preserve the primary brand palette
 
 ### Deployment
 
