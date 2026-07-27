@@ -2,7 +2,7 @@
 
 ## Project
 
-**Query Doctor**
+**QueryMend**
 
 Version: 0.1.0 (MVP)
 

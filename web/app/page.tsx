@@ -119,7 +119,7 @@ export default function Home() {
           </p>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
-            Query Doctor
+            QueryMend
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-400">
@@ -227,7 +227,7 @@ GROUP BY customer_id;`}
 
           <div className="mt-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="max-w-2xl text-sm leading-6 text-zinc-500">
-              Query Doctor performs static analysis only. It does not execute
+              QueryMend performs static analysis only. It does not execute
               your query or inspect your database schema, indexes, statistics,
               or data distribution.
             </p>

@@ -1,4 +1,4 @@
-# Query Doctor Evaluation Suite
+# QueryMend Evaluation Suite
 
 This directory contains a small evaluation suite for measuring SQL review quality and response time.
 

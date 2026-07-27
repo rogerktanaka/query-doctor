@@ -123,42 +123,42 @@ export async function POST(request: Request) {
 
     if (exposeReviewMetrics) {
       headers[
-        "X-Query-Doctor-Model"
+        "X-QueryMend-Model"
       ] = metadata.model;
 
       if (metadata.usage !== null) {
       headers[
-        "X-Query-Doctor-Input-Tokens"
+        "X-QueryMend-Input-Tokens"
       ] = String(
         metadata.usage.inputTokens,
       );
 
       headers[
-        "X-Query-Doctor-Cached-Input-Tokens"
+        "X-QueryMend-Cached-Input-Tokens"
       ] = String(
         metadata.usage.cachedInputTokens,
       );
 
       headers[
-        "X-Query-Doctor-Cache-Write-Tokens"
+        "X-QueryMend-Cache-Write-Tokens"
       ] = String(
         metadata.usage.cacheWriteTokens,
       );
 
       headers[
-        "X-Query-Doctor-Output-Tokens"
+        "X-QueryMend-Output-Tokens"
       ] = String(
         metadata.usage.outputTokens,
       );
 
       headers[
-        "X-Query-Doctor-Reasoning-Tokens"
+        "X-QueryMend-Reasoning-Tokens"
       ] = String(
         metadata.usage.reasoningTokens,
       );
 
         headers[
-          "X-Query-Doctor-Total-Tokens"
+          "X-QueryMend-Total-Tokens"
         ] = String(
           metadata.usage.totalTokens,
         );
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
         metadata.estimatedCostUsd !== null
       ) {
       headers[
-        "X-Query-Doctor-Estimated-Cost-USD"
+        "X-QueryMend-Estimated-Cost-USD"
       ] =
         metadata.estimatedCostUsd.toFixed(8);
     }
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
         null
       ) {
         headers[
-          "X-Query-Doctor-Pricing-Effective-Date"
+          "X-QueryMend-Pricing-Effective-Date"
         ] =
           metadata.pricingEffectiveDate;
       }

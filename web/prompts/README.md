@@ -1,6 +1,6 @@
-# Query Doctor Prompts
+# QueryMend Prompts
 
-This directory contains all prompts used by Query Doctor.
+This directory contains all prompts used by QueryMend.
 
 Prompts are treated as first-class engineering artifacts.
 
@@ -14,9 +14,9 @@ Therefore every prompt modification should have a clear technical justification 
 
 # Philosophy
 
-Query Doctor is not a chatbot.
+QueryMend is not a chatbot.
 
-Query Doctor is an AI-powered SQL code review engine.
+QueryMend is an AI-powered SQL code review engine.
 
 Its objective is not simply to find mistakes.
 
@@ -62,7 +62,7 @@ sql-review-system.md
 
 System prompt used by the SQL Review Engine.
 
-Responsible for defining how Query Doctor analyzes SQL statements.
+Responsible for defining how QueryMend analyzes SQL statements.
 
 ---
 

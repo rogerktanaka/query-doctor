@@ -1,12 +1,28 @@
 # Changelog
 
-All notable changes to Query Doctor will be documented in this file.
+All notable changes to QueryMend will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
 ## [Unreleased]
+
+### Added
+
+- Custom production domain at https://querymend.com
+- Permanent redirect from https://www.querymend.com to the canonical domain
+
+### Changed
+
+- Renamed the product from Query Doctor to QueryMend
+- Updated the application interface, metadata, system prompt, and current documentation to use the QueryMend brand
+- Defined https://querymend.com as the canonical production URL
+
+### Deployment
+
+- QueryMend is available at:
+  https://querymend.com
 
 ### Planning
 

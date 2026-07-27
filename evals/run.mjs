@@ -140,43 +140,43 @@ function parseDecimalHeader(
 function readApiMetrics(response) {
   const model =
     response.headers.get(
-      "x-query-doctor-model",
+      "x-querymend-model",
     );
 
   const inputTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-input-tokens",
+      "x-querymend-input-tokens",
     );
 
   const cachedInputTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-cached-input-tokens",
+      "x-querymend-cached-input-tokens",
     );
 
   const cacheWriteTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-cache-write-tokens",
+      "x-querymend-cache-write-tokens",
     );
 
   const outputTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-output-tokens",
+      "x-querymend-output-tokens",
     );
 
   const reasoningTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-reasoning-tokens",
+      "x-querymend-reasoning-tokens",
     );
 
   const totalTokens =
     parseIntegerHeader(
       response,
-      "x-query-doctor-total-tokens",
+      "x-querymend-total-tokens",
     );
 
   const usageValues = [
@@ -206,12 +206,12 @@ function readApiMetrics(response) {
   const estimatedCostUsd =
     parseDecimalHeader(
       response,
-      "x-query-doctor-estimated-cost-usd",
+      "x-querymend-estimated-cost-usd",
     );
 
   const pricingEffectiveDate =
     response.headers.get(
-      "x-query-doctor-pricing-effective-date",
+      "x-querymend-pricing-effective-date",
     );
 
   return {
@@ -400,7 +400,7 @@ async function ensureServerAvailable() {
 
     throw new Error(
       [
-        `Query Doctor is not available at ${baseUrl}.`,
+        `QueryMend is not available at ${baseUrl}.`,
         "Start the development server with:",
         "cd web && npm run dev",
         `Reason: ${reason}`,

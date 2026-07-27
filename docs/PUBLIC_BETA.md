@@ -1,8 +1,8 @@
-# Query Doctor Controlled Public Beta
+# QueryMend Controlled Public Beta
 
 ## Purpose
 
-The controlled public Beta tests which professional segments find Query Doctor useful, trustworthy, and valuable enough to use repeatedly.
+The controlled public Beta tests which professional segments find QueryMend useful, trustworthy, and valuable enough to use repeatedly.
 
 The experiment expands validation beyond the initial Oracle Retail and integration cohort without treating the product as a finished public release.
 
@@ -63,7 +63,7 @@ Participants must not submit:
 - identifiers that reveal clients, employers, systems, or schemas;
 - production data or execution plans containing sensitive values.
 
-Query Doctor performs static analysis only. It does not connect to a database or execute submitted code.
+QueryMend performs static analysis only. It does not connect to a database or execute submitted code.
 
 The Beta telemetry layer must not store submitted SQL or PL/SQL.
 
@@ -105,7 +105,7 @@ Optional follow-up questions:
 
 1. What did you expect the tool to do that it did not do?
 2. Did the review contain an incorrect or unsupported claim?
-3. Would you use Query Doctor again for real work?
+3. Would you use QueryMend again for real work?
 4. Would receiving revised code make the result more useful?
 
 Optional participant attributes:

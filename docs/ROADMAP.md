@@ -1,10 +1,10 @@
-# Query Doctor Roadmap
+# QueryMend Roadmap
 
 ## Current Version
 
 **Version:** 0.4.1
 **Status:** Oracle Deep Review Beta publicly deployed
-**Production:** https://query-doctor-six.vercel.app
+**Production:** https://querymend.com
 
 ---
 
@@ -15,7 +15,7 @@
 
 ## Goal
 
-Create the first working version of Query Doctor.
+Create the first working version of QueryMend.
 
 A user must be able to paste a SQL query and receive a structured AI-generated review.
 
@@ -99,7 +99,7 @@ Improve the usefulness, consistency, and trustworthiness of SQL reviews.
 
 ## Goal
 
-Allow users to select the target SQL dialect so Query Doctor can provide more accurate syntax and semantics guidance without guessing the database engine.
+Allow users to select the target SQL dialect so QueryMend can provide more accurate syntax and semantics guidance without guessing the database engine.
 
 ## Supported Dialect Choices
 
@@ -201,11 +201,11 @@ PostgreSQL, SQL Server, and MySQL support is experimental.
 
 ## Goal
 
-Make Query Doctor especially useful for Oracle SQL developers while preserving the multi-dialect architecture.
+Make QueryMend especially useful for Oracle SQL developers while preserving the multi-dialect architecture.
 
 ## Product Direction
 
-Query Doctor remains architecturally multi-dialect, but Oracle is the first commercial and technical specialization.
+QueryMend remains architecturally multi-dialect, but Oracle is the first commercial and technical specialization.
 
 The initial target audience is:
 
@@ -263,7 +263,7 @@ The initial target audience is:
 
 ## Goal
 
-Validate who finds recurring value in Query Doctor, for which review workflow, and under what conditions, through a controlled, safe, and measurable public Beta.
+Validate who finds recurring value in QueryMend, for which review workflow, and under what conditions, through a controlled, safe, and measurable public Beta.
 
 ## Validation Strategy
 

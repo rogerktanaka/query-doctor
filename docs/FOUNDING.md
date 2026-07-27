@@ -145,11 +145,11 @@ Success is measured by:
 
 # AI Foundry
 
-Query Doctor is only the first product.
+QueryMend is only the first product.
 
 Future products may include:
 
-- Query Doctor
+- QueryMend
 - Mail Doctor
 - Test Doctor
 - Doc Doctor

@@ -1,8 +1,8 @@
-# Query Doctor Cost Monitoring
+# QueryMend Cost Monitoring
 
 ## Purpose
 
-This document records how Query Doctor measures and estimates AI review costs.
+This document records how QueryMend measures and estimates AI review costs.
 
 The goals are to:
 
@@ -27,7 +27,7 @@ All monetary values in this document are expressed in US dollars.
 
 The application reads the active model from its environment configuration.
 
-If a configured model does not have a registered pricing entry, Query Doctor records token usage but returns no cost estimate.
+If a configured model does not have a registered pricing entry, QueryMend records token usage but returns no cost estimate.
 
 It must not apply `gpt-5` pricing to another model automatically.
 

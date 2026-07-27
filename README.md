@@ -1,17 +1,17 @@
-# Query Doctor
+# QueryMend
 
-Query Doctor is an AI-powered static SQL code review tool.
+QueryMend is an AI-powered static SQL code review tool.
 
-Instead of simply explaining SQL, Query Doctor reviews queries as if they were part of a professional pull request.
+Instead of simply explaining SQL, QueryMend reviews queries as if they were part of a professional pull request.
 
-**Production:** https://query-doctor-six.vercel.app
+**Production:** https://querymend.com
 
 ## Status
 
 **Current version:** `0.4.1`
 **Stage:** Oracle Deep Review Beta
 
-Query Doctor supports multiple SQL dialect contexts while Oracle remains the first deep technical and commercial specialization.
+QueryMend supports multiple SQL dialect contexts while Oracle remains the first deep technical and commercial specialization.
 
 ## Features
 
@@ -42,7 +42,7 @@ PostgreSQL, SQL Server, and MySQL support is experimental and may produce specul
 
 ## Product Direction
 
-Query Doctor is architecturally multi-dialect, but Oracle is the first deep specialization.
+QueryMend is architecturally multi-dialect, but Oracle is the first deep specialization.
 
 The current release adds deeper Oracle coverage for NULL semantics, temporal boundaries, Top-N queries, CTEs, and analytic functions.
 
@@ -66,7 +66,7 @@ The initial target audience includes:
 3. Submit the query for review.
 4. Receive a structured analysis with scores, observations, severity, confidence, suggestions, and limitations.
 
-Query Doctor performs static analysis only.
+QueryMend performs static analysis only.
 
 It does not:
 
@@ -80,7 +80,7 @@ It does not:
 
 ## Cost Monitoring
 
-Query Doctor records token usage and estimated AI-provider cost in server-side logs.
+QueryMend records token usage and estimated AI-provider cost in server-side logs.
 
 The local evaluation runner also records per-review and aggregate usage metrics, including:
 
