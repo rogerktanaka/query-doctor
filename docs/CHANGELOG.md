@@ -30,12 +30,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added a production rate limit of five SQL reviews per IP address every ten minutes
 - Restricted the rate limit to POST requests on the `/api/review` endpoint
 - Added a user-friendly message when the review limit returns HTTP 429
+- Added a disabled-by-default emergency WAF rule that can pause SQL reviews without a deployment
+- Added a user-friendly message when the emergency pause returns HTTP 403
 
 ### Deployment
 
 - QueryMend is available at:
   https://querymend.com
-  
+
 ### Planning
 
 - Started Sprint 005 — Public Beta Validation

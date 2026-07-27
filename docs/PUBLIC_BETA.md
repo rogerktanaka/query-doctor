@@ -120,10 +120,10 @@ Optional participant attributes:
 
 Before broader promotion, the application should support:
 
-- per-session or per-origin request limits;
+- a per-IP limit of five review requests every ten minutes;
 - a global daily review limit;
 - a configurable daily cost threshold;
-- a Beta pause switch controlled by environment configuration;
+- a disabled-by-default Vercel WAF deny rule that can pause reviews without a deployment;
 - safe rate-limit and unavailable responses;
 - monitoring of review failures, latency, tokens, and cost.
 
