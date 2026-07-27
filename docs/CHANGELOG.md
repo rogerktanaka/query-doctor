@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Permanent redirect from https://www.querymend.com to the canonical domain
 - QueryMend visual identity with a custom split-Q symbol
 - Branded application icon and favicon
+- Branded Open Graph image for link previews and social sharing
 
 ### Changed
 
