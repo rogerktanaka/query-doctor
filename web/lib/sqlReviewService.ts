@@ -49,6 +49,12 @@ export async function reviewSql(
     );
   }
 
+  if (response.status === 429) {
+    throw new Error(
+      "You’ve reached the Beta review limit. Please wait a few minutes and try again.",
+    );
+  }
+
   let result: unknown;
 
   try {

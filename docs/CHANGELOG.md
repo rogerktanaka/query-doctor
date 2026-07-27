@@ -23,12 +23,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Defined https://querymend.com as the canonical production URL
 - Applied the QueryMend emerald and off-white brand palette to the application header
 - Replaced the violet Beta badge with a neutral treatment to preserve the primary brand palette
+- Replaced the violet Beta badge with a neutral treatment to preserve the primary brand palette
+
+### Security
+
+- Added a production rate limit of five SQL reviews per IP address every ten minutes
+- Restricted the rate limit to POST requests on the `/api/review` endpoint
+- Added a user-friendly message when the review limit returns HTTP 429
 
 ### Deployment
 
 - QueryMend is available at:
   https://querymend.com
-
+  
 ### Planning
 
 - Started Sprint 005 — Public Beta Validation
