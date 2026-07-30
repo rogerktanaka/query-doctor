@@ -33,6 +33,8 @@ export default function Home() {
     useState<SqlDialect>("oracle");
   const [review, setReview] =
     useState<ReviewResultType | null>(null);
+  const [reviewId, setReviewId] =
+    useState<string | null>(null);
   const [isReviewing, setIsReviewing] =
     useState(false);
   const [error, setError] =
@@ -46,6 +48,7 @@ export default function Home() {
 
   function clearReviewState() {
     setReview(null);
+    setReviewId(null);
     setError(null);
   }
 
@@ -88,6 +91,7 @@ export default function Home() {
 
     setIsReviewing(true);
     setReview(null);
+    setReviewId(null);
     setError(null);
 
     try {
@@ -96,7 +100,8 @@ export default function Home() {
         dialect,
       );
 
-      setReview(result);
+      setReview(result.review);
+      setReviewId(result.reviewId);
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -272,10 +277,16 @@ GROUP BY customer_id;`}
         )}
 
         {review && (
-          <ReviewResult
-            review={review}
-            dialect={dialect}
-          />
+          <div
+            data-review-id={
+              reviewId ?? undefined
+            }
+          >
+            <ReviewResult
+              review={review}
+              dialect={dialect}
+            />
+          </div>
         )}
       </div>
     </main>

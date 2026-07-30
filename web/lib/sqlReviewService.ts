@@ -9,6 +9,11 @@ interface ReviewErrorResponse {
   code?: string;
 }
 
+export interface SqlReviewResponse {
+  review: ReviewResult;
+  reviewId: string | null;
+}
+
 function isReviewErrorResponse(
   value: unknown,
 ): value is ReviewErrorResponse {
@@ -25,7 +30,7 @@ function isReviewErrorResponse(
 export async function reviewSql(
   sql: string,
   dialect: SqlDialect = DEFAULT_SQL_DIALECT,
-): Promise<ReviewResult> {
+): Promise<SqlReviewResponse> {
   if (!sql.trim()) {
     throw new Error("SQL query is required.");
   }
@@ -61,6 +66,11 @@ export async function reviewSql(
     );
   }
 
+  const reviewId =
+    response.headers.get(
+      "X-QueryMend-Review-ID",
+    );
+
   let result: unknown;
 
   try {
@@ -83,5 +93,8 @@ export async function reviewSql(
     throw new Error(message);
   }
 
-  return result as ReviewResult;
+  return {
+    review: result as ReviewResult,
+    reviewId,
+  };
 }
