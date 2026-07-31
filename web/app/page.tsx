@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import { ReviewFeedback } from "@/components/ReviewFeedback";
 import { ReviewResult } from "@/components/ReviewResult";
 import { MAX_SQL_LENGTH } from "@/lib/review/reviewLimits";
 import {
@@ -277,16 +278,24 @@ GROUP BY customer_id;`}
         )}
 
         {review && (
-          <div
-            data-review-id={
-              reviewId ?? undefined
-            }
-          >
-            <ReviewResult
-              review={review}
-              dialect={dialect}
-            />
-          </div>
+          <>
+            <div
+              data-review-id={
+                reviewId ?? undefined
+              }
+            >
+              <ReviewResult
+                review={review}
+                dialect={dialect}
+              />
+            </div>
+
+            {reviewId && (
+              <ReviewFeedback
+                reviewId={reviewId}
+              />
+            )}
+          </>
         )}
       </div>
     </main>
