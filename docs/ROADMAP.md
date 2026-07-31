@@ -322,7 +322,7 @@ The Beta should recruit participants across different:
 ## Definition of Done
 
 - [x] Public Beta purpose, audience, limits, and success criteria are documented.
-- [ ] Participants receive clear privacy and confidentiality guidance.
+- [x] Participants receive clear privacy and confidentiality guidance.
 - [x] Submitted SQL is not stored by the Beta telemetry layer.
 - [x] Review feedback can be submitted from the application.
 - [x] Review usage, latency, dialect, and estimated cost can be measured.
