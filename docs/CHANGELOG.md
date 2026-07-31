@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - QueryMend visual identity with a custom split-Q symbol
 - Branded application icon and favicon
 - Branded Open Graph image for link previews and social sharing
+- Privacy-preserving review telemetry backed by Neon Postgres
+- Per-review measurement of dialect, latency, token usage, model, and estimated cost
+- In-product Public Beta feedback linked to completed reviews
+- Feedback collection for usefulness, repeat-use intent, revised-code demand, and PL/SQL demand
 
 ### Changed
 
@@ -22,7 +26,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the application interface, metadata, system prompt, and current documentation to use the QueryMend brand
 - Defined https://querymend.com as the canonical production URL
 - Applied the QueryMend emerald and off-white brand palette to the application header
-- Replaced the violet Beta badge with a neutral treatment to preserve the primary brand palette
 - Replaced the violet Beta badge with a neutral treatment to preserve the primary brand palette
 
 ### Security
@@ -32,6 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added a user-friendly message when the review limit returns HTTP 429
 - Added a disabled-by-default emergency WAF rule that can pause SQL reviews without a deployment
 - Added a user-friendly message when the emergency pause returns HTTP 403
+- Kept submitted SQL out of review telemetry and feedback records
+- Validated feedback requests and associated them only with recorded review identifiers
 
 ### Deployment
 

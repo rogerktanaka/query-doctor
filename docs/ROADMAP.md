@@ -323,16 +323,16 @@ The Beta should recruit participants across different:
 
 - [x] Public Beta purpose, audience, limits, and success criteria are documented.
 - [ ] Participants receive clear privacy and confidentiality guidance.
-- [ ] Submitted SQL is not stored by the Beta telemetry layer.
-- [ ] Review feedback can be submitted from the application.
-- [ ] Review usage, latency, dialect, and estimated cost can be measured.
+- [x] Submitted SQL is not stored by the Beta telemetry layer.
+- [x] Review feedback can be submitted from the application.
+- [x] Review usage, latency, dialect, and estimated cost can be measured.
 - [x] Abuse and accidental budget consumption have basic protections.
 - [x] The Beta can be paused without a code deployment.
 - [ ] At least 15 participants complete a review.
 - [ ] At least three professional profiles are represented.
 - [ ] At least three database contexts are represented.
 - [ ] At least five participants provide qualitative feedback.
-- [ ] Repeat-use intent and revised-code demand are measured.
+- [x] Repeat-use intent and revised-code demand are measured.
 - [ ] Sprint 006 direction is documented from observed evidence.
 
 ## Out of Scope

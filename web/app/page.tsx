@@ -244,6 +244,19 @@ GROUP BY customer_id;`}
             </p>
           )}
 
+          <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="text-sm font-medium text-amber-300">
+              Protect confidential information
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-amber-100/70">
+              Use anonymized or synthetic SQL. Do not submit credentials,
+              personal or customer data, confidential source code, proprietary
+              business rules, or identifiers that reveal clients, employers,
+              systems, or schemas.
+            </p>
+          </div>
+
           <div className="mt-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="max-w-2xl text-sm leading-6 text-zinc-500">
               QueryMend performs static analysis only. It does not execute
